@@ -145,18 +145,51 @@ it there.
 
 ### Colour rules — enforce these
 
-1. **Yellow appears at most five times in the page body.** As built, those five are:
-   the hero primary CTA, the hero headline marker, the "My schedule" tier-one card,
-   the CME progress ring, and the Denver 2027 band. Any additional yellow *in the
-   page body* must displace one of these.
+1. **Yellow marks two things, and nothing else:**
 
-   **Chrome and overlays sit outside this budget** — they are navigation state and
-   transient layers, not composition. Currently outside it: the ARRS logo mark, the
-   mobile tab bar's active underline (mandated below), the sticky CTA bar's repeated
-   primary at 640–1024px, the skip link on focus, and the register modal's submit.
-   Measured totals are therefore 5 at ≥1024px and 6 below, and that is expected.
-   The sticky bar's yellow is the cheapest to give up if the count must be five
-   everywhere — it duplicates a button already in the hero.
+   1. **the primary action of a section**, and
+   2. **live personal state** — a number that belongs to the attendee.
+
+   That is the whole rule. Everything decorative is disqualified by it, which is
+   what the rule is for. **The count is a consequence, not the rule** — do not
+   add a yellow surface to hit a number, and do not refuse one that genuinely
+   qualifies because a tally says five.
+
+   This supersedes the earlier "at most five in the page body" cap. That cap was
+   written when the store was a small white block inside the paper container; it
+   could not survive the store becoming a full-bleed brand section, and a
+   page-wide tally was never the actual design intent — it was a proxy for it.
+   A principle is also the stronger README argument: "yellow means action or
+   your own state" defends itself, "we counted to five" does not.
+
+   As built, the page body qualifies eight times:
+
+   | surface | qualifies as |
+   |---|---|
+   | hero primary CTA | action |
+   | hero headline marker | brand emphasis — the one documented exception |
+   | CME progress ring | state |
+   | store `Shop the store` CTA | action |
+   | store active-row ordinal | state |
+   | store dwell rail | state |
+   | "My schedule" tier-one card | state |
+   | Denver 2027 band | action |
+
+   The store's ordinal and dwell rail sit on the same row and read as one
+   accent, so the section presents as two marks, not three.
+
+   **Light is not a surface.** A brand-tinted gradient bloom (the store's warm
+   cast under the deck) is illumination, not composition, and does not qualify
+   or disqualify under this rule.
+
+   **Chrome and overlays sit outside it entirely** — they are navigation state
+   and transient layers. That covers the ARRS logo mark, the mobile tab bar's
+   active underline, the sticky CTA bar's repeated primary at 640–1024px, the
+   skip link on focus, and the register modal's submit.
+
+   If a surface cannot be named in the "qualifies as" column, it does not get
+   yellow.
+
 2. **Body text is `--color-body` (navy-derived), never `#000`.** This single change is what separates "designed" from "default".
 3. **Text on yellow is `--color-brand-ink`** for controls, never black, never gray.
    **Exception, approved:** the hero headline marker uses `--color-ink` (navy) at
@@ -662,7 +695,9 @@ Only after phase 2 is approved. Run the Definition of done checklist item by ite
 - [ ] Every string traces to `resources/reference-image.png`, the inventory, or the
       invented-data ledger — and the ledger has been reviewed for replacement
 - [ ] All twelve destinations present, grouped into three tiers
-- [ ] Yellow: five in the page body; chrome exceptions are the documented ones only
+- [ ] Yellow: every surface names what it qualifies as — a section's primary
+      action, or live personal state. Nothing decorative. Chrome and overlays
+      are outside the rule; gradient blooms are light, not surfaces
 - [ ] Zero `href="#"`; every route resolves
 - [ ] No horizontal scroll at 320px, and none at any tested width
 - [ ] No interactive control under 44×44
