@@ -396,23 +396,48 @@
     0 18px 34px -14px color-mix(in oklab, var(--color-brand) 55%, transparent);
 }
 
-/* Footer. A gentle lift out of --color-ink at the top so the band reads as its
-   own surface after the Denver yellow, settling back to ink at the base rather
-   than sitting as one flat slab. */
+/* Footer field. Layered rather than a single ramp: a cool bloom top-left, a
+   warm one bottom-right so the band is not one temperature, a vignette to pull
+   the corners down, and a lift out of --color-ink at the top so the surface
+   reads as its own after the Denver yellow. */
 @utility footer-field {
   background-color: var(--color-ink);
   background-image:
     radial-gradient(
-      80% 60% at 12% 0%,
-      color-mix(in oklab, var(--color-blue) 22%, transparent) 0%,
-      transparent 62%
+      66% 52% at 8% 4%,
+      color-mix(in oklab, var(--color-blue) 34%, transparent) 0%,
+      transparent 64%
+    ),
+    radial-gradient(
+      54% 44% at 94% 96%,
+      color-mix(in oklab, var(--color-brand) 11%, transparent) 0%,
+      transparent 66%
+    ),
+    radial-gradient(
+      120% 90% at 50% 30%,
+      transparent 34%,
+      color-mix(in oklab, black 34%, transparent) 100%
     ),
     linear-gradient(
       180deg,
       var(--color-ink-raised) 0px,
-      color-mix(in oklab, var(--color-ink-raised) 40%, var(--color-ink)) 220px,
-      var(--color-ink) 460px
+      color-mix(in oklab, var(--color-ink-raised) 40%, var(--color-ink)) 240px,
+      var(--color-ink) 520px
     );
+}
+
+/* Oversized rendition of the logo's own bars, bled off the bottom-right
+   corner and heavily blurred. Unblurred at 3% they still read as stray
+   rectangles behind the link columns; blurred they become light shafts that
+   happen to carry the mark's rhythm, which is the point — brand-derived depth
+   rather than a generic glow. */
+@utility footer-mark {
+  filter: blur(34px);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 32'><g fill='%23ffffff'><rect x='5' y='12' width='4' height='20'/><rect x='10.5' y='7' width='4' height='25'/><rect x='16' y='3' width='5' height='29'/><rect x='22.5' y='9' width='4' height='23'/><rect x='28' y='14' width='4' height='18'/></g></svg>");
+  background-repeat: no-repeat;
+  background-position: right -5rem bottom -6rem;
+  background-size: auto 92%;
+  opacity: 0.07;
 }
 
 /* Underline grows from the left on hover instead of switching on. */

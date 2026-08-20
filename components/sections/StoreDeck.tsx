@@ -188,8 +188,13 @@ export function StoreDeck() {
         >
           <ChevronRight aria-hidden="true" className="size-5" strokeWidth={1.5} />
         </button>
-        <span aria-hidden="true" className="type-micro ml-2 text-on-dark/80">
-          {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+        <span aria-hidden="true" className="ml-2 flex items-baseline gap-2.5">
+          <span className="text-[0.9375rem] text-paper md:hidden">
+            {products[active].name}
+          </span>
+          <span className="type-micro text-on-dark/80">
+            {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+          </span>
         </span>
       </div>
       </div>
@@ -201,7 +206,7 @@ export function StoreDeck() {
         onKeyDown={onKeyDown}
         onMouseEnter={() => setHeld(true)}
         onFocus={() => setHeld(true)}
-        className="flex w-full flex-col md:max-w-[20rem] lg:max-w-[22rem]"
+        className="sr-only md:not-sr-only md:flex md:w-full md:flex-col md:max-w-[20rem] lg:max-w-[22rem]"
       >
         {products.map((product, i) => {
           const isActive = i === active;

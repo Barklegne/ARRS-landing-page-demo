@@ -21,7 +21,12 @@ function FooterAnchor({ link }: { link: FooterLink }) {
 export function SiteFooter() {
   return (
     <footer className="footer-field relative isolate overflow-hidden text-paper">
+      <span aria-hidden="true" className="footer-mark pointer-events-none absolute inset-0" />
       <span aria-hidden="true" className="grain pointer-events-none absolute inset-0" />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-paper/20 to-transparent"
+      />
 
       <div className="relative mx-auto max-w-[1200px] px-5 py-14 lg:py-20">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
@@ -92,7 +97,7 @@ export function SiteFooter() {
           <p className="type-micro text-on-dark/70">{meeting.formats}</p>
         </div>
 
-        <div className="mt-8 flex flex-col gap-2 border-t border-ink-line pt-6 text-on-dark/70 md:flex-row md:items-center md:justify-between">
+        <div className="mt-8 flex flex-col gap-2 border-t border-ink-line pt-6 text-on-dark/85 md:flex-row md:items-center md:justify-between">
           <p className="text-[0.8125rem]">{footer.legal}</p>
           <p className="type-micro">{meeting.place}</p>
         </div>
