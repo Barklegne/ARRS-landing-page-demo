@@ -34,7 +34,7 @@ export function StoreSection() {
               <ArrowRight
                 aria-hidden="true"
                 strokeWidth={1.5}
-                className="size-4 transition-transform duration-200 ease-[var(--ease-hero)] group-hover:translate-x-1"
+                className="size-4 transition-[translate] duration-300 ease-[var(--ease-hero)] group-hover:translate-x-1"
               />
             </CTA>
           </div>

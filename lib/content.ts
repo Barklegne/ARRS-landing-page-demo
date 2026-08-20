@@ -249,13 +249,7 @@ export const store = {
   products: [
     { id: "hoodie", name: "Hoodie", src: "/store/hoodie-navy.webp" },
     { id: "roentgen-ray-tee", name: "Roentgen Ray tee", src: "/store/roentgen-ray-tee.webp" },
-    {
-      id: "mugs",
-      name: "Mugs",
-      src: "/store/mugs.webp",
-      fit: "contain",
-      ground: "#0C1327",
-    },
+    { id: "mugs", name: "Mugs", src: "/store/mugs.webp" },
     { id: "radres-tee", name: "RADRES tee", src: "/store/radres-tee.webp" },
   ],
 } as const satisfies {

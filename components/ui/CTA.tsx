@@ -1,8 +1,11 @@
 import Link from "next/link";
 import type { AppRoute } from "@/lib/content";
 
+// Tailwind v4 compiles translate-*/scale-* to the INDEPENDENT `translate` and
+// `scale` properties, not the `transform` shorthand. Both must be named here or
+// a hover lift jumps instantly while the shadow beside it eases.
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-xl text-[0.9375rem] font-medium transition-[filter,background-color,border-color,color,transform,box-shadow] duration-200 ease-[var(--ease-hero)]";
+  "inline-flex items-center justify-center gap-2 rounded-xl text-[0.9375rem] font-medium transition-[filter,background-color,border-color,color,transform,translate,scale,box-shadow] duration-300 ease-[var(--ease-hero)]";
 
 const variants = {
   primary: `${base} cta-primary h-12 px-6 hover:brightness-[0.96]`,

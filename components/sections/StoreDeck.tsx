@@ -141,7 +141,7 @@ export function StoreDeck() {
                   {isActive ? (
                     <span
                       aria-hidden="true"
-                      className="absolute top-3 right-3 flex size-9 items-center justify-center rounded-full bg-brand text-brand-ink transition-transform duration-200 group-hover:scale-110"
+                      className="absolute top-3 right-3 flex size-9 items-center justify-center rounded-full bg-ink/65 text-brand backdrop-blur-sm transition-[scale,background-color] duration-200 ease-[var(--ease-hero)] group-hover:scale-110 group-hover:bg-ink/85"
                     >
                       <ArrowUpRight className="size-4" strokeWidth={2} />
                     </span>

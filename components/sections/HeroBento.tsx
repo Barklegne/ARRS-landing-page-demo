@@ -119,10 +119,14 @@ export function HeroBento() {
             >
               <PlayLink
                 href={hero.primaryCta.href}
-                className="cta-primary inline-flex h-12 items-center justify-center gap-2 rounded-xl px-6 text-[0.9375rem] font-medium transition-[filter] duration-150 hover:brightness-[0.96]"
+                className="cta-primary group inline-flex h-12 items-center justify-center gap-2 rounded-xl px-6 text-[0.9375rem] font-medium transition-[filter,translate,scale,box-shadow] duration-300 ease-[var(--ease-hero)] hover:-translate-y-0.5 hover:brightness-[0.96] hover:cta-lift"
               >
                 {hero.primaryCta.label}
-                <ArrowRight aria-hidden="true" className="size-4" strokeWidth={1.5} />
+                <ArrowRight
+                  aria-hidden="true"
+                  strokeWidth={1.5}
+                  className="size-4 transition-[translate] duration-300 ease-[var(--ease-hero)] group-hover:translate-x-1"
+                />
               </PlayLink>
               <RegisterDialog />
             </div>
