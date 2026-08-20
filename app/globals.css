@@ -396,6 +396,21 @@
     0 18px 34px -14px color-mix(in oklab, var(--color-brand) 55%, transparent);
 }
 
+@utility deck-nav {
+  color: var(--color-on-dark);
+  border: 0.5px solid color-mix(in oklab, var(--color-paper) 20%, transparent);
+  background-color: color-mix(in oklab, var(--color-paper) 5%, transparent);
+  transition:
+    color 200ms var(--ease-hero),
+    border-color 200ms var(--ease-hero),
+    background-color 200ms var(--ease-hero);
+}
+.deck-nav:hover {
+  color: var(--color-paper);
+  border-color: color-mix(in oklab, var(--color-paper) 38%, transparent);
+  background-color: color-mix(in oklab, var(--color-paper) 10%, transparent);
+}
+
 @utility cta-glass {
   color: var(--color-paper);
   background-color: color-mix(in oklab, var(--color-paper) 8%, transparent);

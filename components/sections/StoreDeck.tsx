@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { productImage, store, type Product } from "@/lib/content";
 
 const products: readonly Product[] = store.products;
@@ -30,16 +30,25 @@ export function StoreDeck() {
     setHeld(true);
   }, []);
 
+  // One lap, then it rests. An indefinite loop is motion with nothing left to
+  // say once you have seen all four, and it keeps pulling the eye back for the
+  // whole time the section is on screen.
+  const [lapDone, setLapDone] = useState(false);
+  const advances = useRef(0);
+
   useEffect(() => {
-    if (held) return;
+    if (held || lapDone) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const id = window.setInterval(
-      () => setActive((i) => (i + 1) % count),
-      store.dwell,
-    );
+    const id = window.setInterval(() => {
+      advances.current += 1;
+      setActive((i) => (i + 1) % count);
+      if (advances.current >= count) setLapDone(true);
+    }, store.dwell);
     return () => window.clearInterval(id);
-  }, [held]);
+  }, [held, lapDone]);
+
+  const resting = held || lapDone;
 
   // Horizontal drag/swipe on the stage. Vertical intent is left alone so the
   // page still scrolls through the card — hence touch-action: pan-y and the
@@ -49,6 +58,14 @@ export function StoreDeck() {
   const onPointerDown = (event: React.PointerEvent) => {
     swipe.current = { x: event.clientX, y: event.clientY };
   };
+
+  // Functional updater, not `active + direction`. Closing over `active` meant
+  // two clicks fired before React re-rendered both computed from the same
+  // stale index, so a rapid double-tap on Previous moved one step, not two.
+  const step = useCallback((direction: 1 | -1) => {
+    setActive((i) => (i + direction + count) % count);
+    setHeld(true);
+  }, []);
 
   const onPointerUp = (event: React.PointerEvent) => {
     const start = swipe.current;
@@ -60,7 +77,7 @@ export function StoreDeck() {
     if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
 
     event.preventDefault();
-    takeOver((active + (dx < 0 ? 1 : -1) + count) % count);
+    step(dx < 0 ? 1 : -1);
   };
 
   const onKeyDown = (event: React.KeyboardEvent) => {
@@ -151,6 +168,30 @@ export function StoreDeck() {
             );
           })}
         </div>
+      {/* Explicit prev/next under the stage, because the deck's other two
+          affordances are both discovery-dependent: you have to guess it is
+          swipeable, or notice the rows are clickable. */}
+      <div className="mt-5 flex items-center justify-center gap-2 md:justify-start">
+        <button
+          type="button"
+          onClick={() => step(-1)}
+          aria-label="Previous product"
+          className="deck-nav flex size-11 items-center justify-center rounded-full"
+        >
+          <ChevronLeft aria-hidden="true" className="size-5" strokeWidth={1.5} />
+        </button>
+        <button
+          type="button"
+          onClick={() => step(1)}
+          aria-label="Next product"
+          className="deck-nav flex size-11 items-center justify-center rounded-full"
+        >
+          <ChevronRight aria-hidden="true" className="size-5" strokeWidth={1.5} />
+        </button>
+        <span aria-hidden="true" className="type-micro ml-2 text-on-dark/80">
+          {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+        </span>
+      </div>
       </div>
 
       <div
@@ -201,9 +242,9 @@ export function StoreDeck() {
                   className="absolute inset-x-0 -bottom-px h-0.5 bg-paper/20"
                 >
                   <span
-                    key={`${active}-${String(held)}`}
+                    key={`${active}-${String(resting)}`}
                     style={{ "--store-dwell": `${store.dwell}ms` } as React.CSSProperties}
-                    className={`block h-full w-full bg-brand ${held ? "" : "store-dwell"}`}
+                    className={`block h-full w-full bg-brand ${resting ? "" : "store-dwell"}`}
                   />
                 </span>
               ) : null}

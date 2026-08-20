@@ -241,7 +241,7 @@ export interface Product {
 
 export const store = {
   eyebrow: "THE ARRS STORE",
-  heading: "Your community. Your gear.",
+  heading: "Take the meeting home.",
   body: "Roentgen Ray apparel, mugs, and RADRES merch.",
   cta: { label: "Shop the store", href: "/store" },
   /** Milliseconds the deck holds a product before advancing. */

@@ -293,7 +293,13 @@ Awardees · Donor wall · Sponsors
 
 **Store section**
 - Eyebrow: `THE ARRS STORE`
-- Heading: `Your community. Your gear.`
+- Heading: `Take the meeting home.` — **changed from the inventory's
+  `Your community. Your gear.`, approved.** The original was two generic
+  possessives that named the audience rather than saying anything, and it
+  echoed the hero's `Every session, still yours` without adding to it. The
+  replacement earns its place: it covers apparel *and* mugs, where "gear" does
+  not, and it ties merchandise back to the meeting the whole page is about
+  instead of treating the store as a bolt-on.
 - Body: `Roentgen Ray apparel, mugs, and RADRES merch.`
 - CTA: `Shop the store`
 - Products: Hoodie · Roentgen Ray tee · Mugs · RADRES tee
