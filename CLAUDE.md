@@ -185,7 +185,23 @@ well as a colour change; an error needs a word as well as red. This is WCAG
    covering only part of the cap height leaves ascenders navy-on-navy and the phrase
    becomes unreadable. This was built literally first and it failed; the full-cover
    version is correct.
-Ship a **dark mode** via `prefers-color-scheme`. The navy sections stay; the paper sections invert to `--color-ink`. The yellow is unchanged — it reads correctly on both.
+**Dark mode needs rethinking, and the plan below is now stale.** It read: "the
+navy sections stay; the paper sections invert to `--color-ink`." The landing
+page no longer has paper sections — hero, ticker, store, all three destination
+tiers, the app section and the footer are navy, with the Denver band the single
+bright interruption. There is nothing left to invert.
+
+Two honest options, neither yet chosen:
+
+- **Ship a light mode instead.** The dark treatment becomes the default and
+  `prefers-color-scheme: light` lifts the surfaces. This is the more interesting
+  submission and matches the "logged-in portal, not a marketing page" argument,
+  but it is the larger build.
+- **Declare the page dark-only** via `color-scheme: dark`, so form controls and
+  scrollbars match, and say so in the README rather than shipping a half theme.
+
+`--color-paper` is now only load-bearing on the stub routes. Whichever option
+wins, the stubs need to agree with it.
 
 ---
 

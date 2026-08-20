@@ -26,7 +26,7 @@ export function Card({
         isLarge ? "gap-6 p-4 @3xl:min-h-[150px] @3xl:p-5" : "gap-5 p-4",
         highlight
           ? "border-transparent bg-brand text-brand-ink"
-          : "border-hairline bg-card text-body",
+          : "tier-card text-paper hover:tier-card-hover",
         span ? spanClass[span] : "",
       ].join(" ")}
     >
@@ -39,7 +39,7 @@ export function Card({
         <span className="type-card">{label}</span>
         {meta ? (
           <span
-            className={`type-body ${highlight ? "text-brand-ink/80" : "text-muted"}`}
+            className={`type-body ${highlight ? "text-brand-ink/80" : "text-on-dark"}`}
           >
             {meta}
           </span>

@@ -11,7 +11,9 @@ const columns: Record<string, string> = {
 export function DestinationTier({ tier }: { tier: Tier }) {
   return (
     <section aria-labelledby={`${tier.id}-eyebrow`} className="@container">
-      <Eyebrow id={`${tier.id}-eyebrow`} as="h2">{tier.eyebrow}</Eyebrow>
+      <Eyebrow id={`${tier.id}-eyebrow`} as="h2" tone="dark">
+        {tier.eyebrow}
+      </Eyebrow>
       <div className={`mt-4 grid grid-cols-2 gap-3 ${columns[tier.id]}`}>
         {tier.items.map((destination) => (
           <Card

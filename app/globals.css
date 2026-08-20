@@ -114,6 +114,10 @@
 }
 
 /* Light-on-dark body copy never drops below 15px and holds a 46ch measure. */
+/* Typography only — this sets NO colour despite the name. Pair it with an
+   explicit text-* class at the call site. Inheriting instead gives you
+   --color-body (dark navy) on a navy surface, which measured 1.06:1 in the app
+   section before it was caught. */
 @utility type-body-on-dark {
   font-weight: 400;
   font-size: 15px;
@@ -166,7 +170,6 @@
   --ease-hero: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-wipe: cubic-bezier(0.5, 0, 0.2, 1);
   --color-placeholder: oklch(0.66 0.02 245);
-  --color-paper-tint:  oklch(0.868 0.024 240);  /* store floor <-> paper handoff */
 }
 
 @keyframes hero-rise {
@@ -453,33 +456,35 @@
     );
 }
 
-/* Dissolves the section floor into the paper of "YOUR MEETING" below, so the
-   page reads as one tonal journey (dark hero -> lifting store -> paper) rather
-   than three stacked blocks. Mirrors the fade the hero already uses. */
-@utility store-floor {
+/* The tiers continue the store's navy rather than dropping to paper. The field
+   opens on --color-ink-raised, which is exactly where the store's own gradient
+   ends, then settles back to --color-ink over 760px so the long run of cards
+   sits on deep navy instead of a wash. Fixed length, not a percentage: the
+   region's height changes with content and a percentage would move the
+   handoff. */
+@utility tiers-field {
+  background-color: var(--color-ink);
   background-image: linear-gradient(
     180deg,
-    transparent 0%,
-    color-mix(in oklab, var(--color-paper) 34%, transparent) 52%,
-    color-mix(in oklab, var(--color-paper-tint) 82%, transparent) 80%,
-    var(--color-paper-tint) 100%
+    var(--color-ink-raised) 0px,
+    color-mix(in oklab, var(--color-ink-raised) 55%, var(--color-ink)) 300px,
+    var(--color-ink) 760px
   );
 }
 
-/* The paper region opens on the exact colour the store floor lands on, then
-   releases to paper over a fixed 420px so the navy above bleeds into it
-   instead of stopping at a line. Fixed length, not a percentage — the region's
-   height changes with content and a percentage would move the handoff. */
-@utility tiers-field {
-  background-color: var(--color-paper);
-  background-image: linear-gradient(
-    180deg,
-    var(--color-paper-tint) 0px,
-    color-mix(in oklab, var(--color-paper-tint) 62%, var(--color-paper)) 340px,
-    color-mix(in oklab, var(--color-paper-tint) 22%, var(--color-paper)) 620px,
-    var(--color-paper) 860px
-  );
+/* Destination + app surfaces on navy. A translucent lift rather than a solid
+   fill, so the field's gradient reads through the cards and the run of them
+   does not flatten into a grid of identical chips. */
+@utility tier-card {
+  background-color: color-mix(in oklab, var(--color-paper) 5%, transparent);
+  border-color: color-mix(in oklab, var(--color-paper) 14%, transparent);
+  transition: border-color 150ms ease, background-color 150ms ease;
 }
+@utility tier-card-hover {
+  border-color: color-mix(in oklab, var(--color-paper) 30%, transparent);
+  background-color: color-mix(in oklab, var(--color-paper) 8%, transparent);
+}
+
 /* A soft bloom directly under the front card so it lifts off the field. */
 @utility store-halo {
   background-image: radial-gradient(
