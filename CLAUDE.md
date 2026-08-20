@@ -334,6 +334,7 @@ without asking.
 | Up-next speaker | `Dr. Alana Whitfield` | fictional |
 | Ticker session titles | four generic strings | as permitted above |
 | Player video | a YouTube ID | stands in for real session media |
+| Store product imagery | 4 generated mockups | **invented ARRS wordmark and merchandise** — not real product |
 
 ---
 

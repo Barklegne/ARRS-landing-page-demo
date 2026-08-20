@@ -238,10 +238,10 @@ export const store = {
   /** Milliseconds the deck holds a product before advancing. */
   dwell: 5600,
   products: [
-    { id: "hoodie", name: "Hoodie" },
-    { id: "roentgen-ray-tee", name: "Roentgen Ray tee" },
-    { id: "mugs", name: "Mugs" },
-    { id: "radres-tee", name: "RADRES tee" },
+    { id: "hoodie", name: "Hoodie", src: "/store/hoodie-yellow.webp" },
+    { id: "roentgen-ray-tee", name: "Roentgen Ray tee", src: "/store/roentgen-ray-tee.webp" },
+    { id: "mugs", name: "Mugs", src: "/store/mugs.webp" },
+    { id: "radres-tee", name: "RADRES tee", src: "/store/radres-tee.webp" },
   ],
 } as const satisfies {
   readonly eyebrow: string;

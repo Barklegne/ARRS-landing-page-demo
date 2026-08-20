@@ -180,3 +180,60 @@ accent.
 
 Anything without a `src` falls back to a labelled placeholder, so a partial set
 still works — you can add them one at a time.
+
+---
+
+# Round two — making the set consistent
+
+The first batch produced **four good images that are not a set.** Measured
+backgrounds:
+
+| file | corner | centre-top | treatment |
+|---|---|---|---|
+| `hoodie-yellow.webp` | `#FCD900` | `#FDDB23` | flat bright yellow, no vignette |
+| `mugs.webp` | `#6D5008` | `#A17509` | amber, strong vignette |
+| `radres-tee.webp` | `#564008` | `#A3770B` | amber, strong vignette |
+| `roentgen-ray-tee.webp` | `#010206` | `#081122` | near-black navy |
+| `hoodie-navy.webp` | `#060B17` | `#0D1728` | near-black navy |
+
+The deck shows three cards at once, so the mismatch is visible directly — the
+peeking right-hand slivers behind the front card are different colours.
+
+## Recommended target: flat brand yellow
+
+Standardise on the `hoodie-yellow.webp` treatment. Its background measured
+**`#FCD900`**, which is within four points of the site's own brand token
+`#FCD500` — the cards end up literally brand-coloured, matching the
+"Shop the store" button and the "My schedule" card elsewhere on the page.
+
+**Regenerate `mugs`, `radres-tee`, and `roentgen-ray-tee`** with:
+
+> Flat, even **`#FCD500`** yellow background, edge to edge, **no vignette and no
+> radial falloff** — a solid colour field. Product centred, floating, with a soft
+> contact shadow directly beneath it and no ground plane. Match the lighting of
+> the reference hoodie exactly: soft key from upper left, gentle fill from the
+> right. 4:5 portrait, 1122×1402 or larger.
+
+Everything in the original brief still applies **except the navy background
+instruction, which is now superseded** — bottom 22% kept quiet, clean right
+edge, no added text beyond realistic garment branding, no people, no props.
+
+## Alternative: vignetted amber
+
+If the moodier amber of `mugs`/`radres-tee` is preferred, regenerate `hoodie`
+and `roentgen-ray-tee` to match instead — corners near `#5A4208` rising to
+about `#A2760A` at centre-top. Two images to redo instead of three, and the
+dark corners sit slightly more softly against the navy page. The trade is that
+the cards read heavier and no longer echo the brand yellow.
+
+**Pick one and apply it to all four.** Either is good; mixing them is the only
+wrong answer.
+
+## Note on the wordmark
+
+The generated images carry an invented `ARRS / AMERICAN ROENTGEN RAY SOCIETY /
+EST. 1900` lockup, plus `connect . learn . advance.` and `Your Medical Imaging
+Society` on the neck labels. That is fine for a mockup and reads convincingly.
+It is **not** the society's real logo, and the invented-data ledger in
+`CLAUDE.md` records it as placeholder branding to be replaced before this is
+shown as anything but a portfolio piece.
