@@ -24,7 +24,7 @@ export function StoreSection() {
         <div className="mt-6 grid gap-10 lg:mt-8 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:items-center lg:gap-12">
           <div className="flex flex-col items-start gap-4">
             <h2 className="type-section max-w-[14ch] text-paper">{store.heading}</h2>
-            <p className="type-body-on-dark">{store.body}</p>
+            <p className="type-body-on-dark text-on-dark">{store.body}</p>
             <CTA
               href={store.cta.href}
               variant="primary"

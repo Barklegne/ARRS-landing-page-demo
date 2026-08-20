@@ -396,6 +396,73 @@
     0 18px 34px -14px color-mix(in oklab, var(--color-brand) 55%, transparent);
 }
 
+/* Footer. A gentle lift out of --color-ink at the top so the band reads as its
+   own surface after the Denver yellow, settling back to ink at the base rather
+   than sitting as one flat slab. */
+@utility footer-field {
+  background-color: var(--color-ink);
+  background-image:
+    radial-gradient(
+      80% 60% at 12% 0%,
+      color-mix(in oklab, var(--color-blue) 22%, transparent) 0%,
+      transparent 62%
+    ),
+    linear-gradient(
+      180deg,
+      var(--color-ink-raised) 0px,
+      color-mix(in oklab, var(--color-ink-raised) 40%, var(--color-ink)) 220px,
+      var(--color-ink) 460px
+    );
+}
+
+/* Underline grows from the left on hover instead of switching on. */
+@utility footer-link {
+  position: relative;
+  transition: color 180ms var(--ease-hero);
+}
+.footer-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0.45rem;
+  height: 1px;
+  width: 100%;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 260ms var(--ease-hero);
+}
+.footer-link:hover {
+  color: var(--color-paper);
+}
+.footer-link:hover::after {
+  transform: scaleX(1);
+}
+
+@utility social-chip {
+  color: var(--color-on-dark);
+  border: 0.5px solid color-mix(in oklab, var(--color-paper) 18%, transparent);
+  background-color: color-mix(in oklab, var(--color-paper) 4%, transparent);
+  transition:
+    color 200ms var(--ease-hero),
+    border-color 200ms var(--ease-hero),
+    background-color 200ms var(--ease-hero),
+    translate 200ms var(--ease-hero);
+}
+.social-chip:hover {
+  color: var(--color-ink);
+  background-color: var(--color-brand);
+  border-color: transparent;
+  translate: 0 -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-link::after,
+  .social-chip {
+    transition: none !important;
+  }
+}
+
 @utility deck-nav {
   color: var(--color-on-dark);
   border: 0.5px solid color-mix(in oklab, var(--color-paper) 20%, transparent);

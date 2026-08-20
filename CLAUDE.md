@@ -316,7 +316,12 @@ Awardees · Donor wall · Sponsors
 - CTA: `Save the date`
 
 **Footer**
-- Links: Terms of use · Contact · Sponsors
+- Tagline: `Your Medical Imaging Society` · Pillars: `Connect · Learn · Advance`
+  — **the society's own, supplied by the client; not invented.**
+- Links: grouped into `THE MEETING` / `YOUR PORTAL` / `SOCIETY`. Every entry is
+  a destination that already exists elsewhere on the page, so this is a
+  rearrangement of the twelve rather than new content. The inventory's flat
+  Terms of use · Contact · Sponsors list survives inside `SOCIETY`.
 - Social: Facebook, X, Instagram, LinkedIn, YouTube
 - Legal: `Copyright © 2026 American Roentgen Ray Society, ARRS. All rights reserved.`
 

@@ -302,12 +302,58 @@ export const tabs = [
   { id: "credits", label: "Credits", href: "/credit" },
 ] as const;
 
+export interface FooterLink {
+  readonly id: string;
+  readonly label: string;
+  readonly href: string;
+  readonly external?: boolean;
+}
+
 export const footer = {
-  links: [
-    { id: "terms", label: "Terms of use", href: "/terms" },
-    { id: "contact", label: "Contact", href: "/contact" },
-    { id: "sponsors", label: "Sponsors", href: "/sponsors" },
-  ],
+  /** The society's own tagline and pillars, supplied by the client. */
+  tagline: "Your Medical Imaging Society",
+  pillars: ["Connect", "Learn", "Advance"],
+  /**
+   * Grouped from destinations that already exist on the page — this is a
+   * rearrangement of the twelve, not new content. The flat
+   * Terms/Contact/Sponsors list from the inventory survives inside "Society".
+   */
+  columns: [
+    {
+      id: "meeting",
+      title: "THE MEETING",
+      links: [
+        { id: "sessions", label: "Sessions", href: "/sessions" },
+        { id: "posters", label: "Online posters", href: "/posters" },
+        { id: "abstracts", label: "Abstracts", href: "/abstracts" },
+        { id: "key-case", label: "Key case challenge", href: "/key-case-challenge" },
+      ],
+    },
+    {
+      id: "portal",
+      title: "YOUR PORTAL",
+      links: [
+        { id: "schedule", label: "My schedule", href: "/schedule" },
+        { id: "credit", label: "Claim credit", href: "/credit" },
+        { id: "watch", label: "Watch on demand", href: "/watch" },
+        { id: "store", label: "The ARRS store", href: "/store" },
+      ],
+    },
+    {
+      id: "society",
+      title: "SOCIETY",
+      links: [
+        { id: "arrs", label: "arrs.org", href: "https://www.arrs.org", external: true },
+        { id: "contact", label: "Contact", href: "/contact" },
+        { id: "sponsors", label: "Sponsors", href: "/sponsors" },
+        { id: "terms", label: "Terms of use", href: "/terms" },
+      ],
+    },
+  ] as readonly {
+    readonly id: string;
+    readonly title: string;
+    readonly links: readonly FooterLink[];
+  }[],
   // Taken from the live links published on arrs.org, not guessed.
   social: [
     { id: "facebook", label: "ARRS on Facebook", href: "https://www.facebook.com/americanroentgenraysociety" },
