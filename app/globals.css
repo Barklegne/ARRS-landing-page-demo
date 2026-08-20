@@ -166,7 +166,7 @@
   --ease-hero: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-wipe: cubic-bezier(0.5, 0, 0.2, 1);
   --color-placeholder: oklch(0.66 0.02 245);
-  --color-paper-tint:  oklch(0.945 0.010 242);  /* store floor <-> paper handoff */
+  --color-paper-tint:  oklch(0.868 0.024 240);  /* store floor <-> paper handoff */
 }
 
 @keyframes hero-rise {
@@ -475,8 +475,9 @@
   background-image: linear-gradient(
     180deg,
     var(--color-paper-tint) 0px,
-    color-mix(in oklab, var(--color-paper-tint) 45%, var(--color-paper)) 180px,
-    var(--color-paper) 420px
+    color-mix(in oklab, var(--color-paper-tint) 62%, var(--color-paper)) 340px,
+    color-mix(in oklab, var(--color-paper-tint) 22%, var(--color-paper)) 620px,
+    var(--color-paper) 860px
   );
 }
 /* A soft bloom directly under the front card so it lifts off the field. */
