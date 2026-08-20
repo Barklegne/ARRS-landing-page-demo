@@ -11,6 +11,10 @@ export function StoreSection() {
       className="store-field relative isolate overflow-hidden text-paper"
     >
       <span aria-hidden="true" className="grain pointer-events-none absolute inset-0" />
+      <span
+        aria-hidden="true"
+        className="store-floor pointer-events-none absolute inset-x-0 bottom-0 h-44"
+      />
 
       <div className="relative mx-auto max-w-[1200px] px-5 py-14 lg:py-16">
         <Eyebrow id="store-eyebrow" tone="dark">

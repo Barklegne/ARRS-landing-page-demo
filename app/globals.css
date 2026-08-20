@@ -503,6 +503,23 @@
     0 32px 60px -32px color-mix(in oklab, black 90%, transparent);
 }
 
+/* Neutralises every decorative bloom before the section's floor.
+   store-field's linear ramp ends on --color-ink-raised and tiers-field opens on
+   it, so landing this overlay on the same token makes the seam exact by
+   construction rather than by tuning each bloom's reach.
+
+   The blooms are what made the cut visible: under the deck the floor measured
+   b-r 36 against the tiers' 44 — a hue break across a hard line, with
+   luminance almost unchanged. Measuring luminance alone will not catch this. */
+@utility store-floor {
+  background-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklab, var(--color-ink-raised) 55%, transparent) 58%,
+    var(--color-ink-raised) 100%
+  );
+}
+
 /* Depth transition. Slots carry transform/opacity only, so the whole deck
    animates by re-assigning classes — no keyframes, and the global
    reduced-motion block already collapses it to an instant swap. */

@@ -647,6 +647,14 @@ emulation, and LCP/CLS. Use it for:
   `clipPath`, and final numerals. Toggle the setting, never read the CSS.
 - **Dialogs** — `:modal`, focus inside on open, real `Escape` keypress, focus restored
 - **Animation** — sample `getComputedStyle` across the window to prove interpolation
+- **Section seams** — compare the two sides **per RGB channel, and check hue
+  separately**, not by luminance. A decorative bloom that dies at a section
+  boundary shifts hue while barely moving luminance: the store's floor measured
+  b−r 36 under the deck against the tiers' 44, a plainly visible cut across the
+  full width, while a luminance-only check reported a 5-point step and was
+  waved through. Where a section carries blooms, land an overlay on the exact
+  token the next section opens with, so the match holds by construction instead
+  of by tuning each bloom's reach.
 
 Headless has no media stack, so video playback cannot be confirmed there. Say so rather
 than implying it was checked.
