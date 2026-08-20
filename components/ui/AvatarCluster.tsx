@@ -13,7 +13,7 @@ export function AvatarCluster() {
               aria-hidden="true"
               width={44}
               height={44}
-              className="avatar-ring size-11 shrink-0 rounded-full object-cover"
+              className="avatar-ring size-10 shrink-0 rounded-full object-cover lg:size-9"
             />
           </li>
         ))}

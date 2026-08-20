@@ -627,8 +627,14 @@ Asset plan:
   correct `sizes`, desaturated, at 70% opacity under the scrim stack. A radiograph beats
   a skyline here: it is the society's own subject matter and its rib rhythm reads as
   tonal texture. Credit it in the README.
-- **Attendee avatars** (5) — Unsplash portraits cropped `fit=facearea&facepad=3`, fixed
-  44×44 through `next/image`. These are **real people who did not attend ARRS**; they are
+- **Attendee avatars** (5) — Unsplash portraits cropped `fit=facearea&facepad=3`,
+  rendered 40×40, or 36×36 from `lg`. 44×44 sat heavy against the 15px line
+  beside it, and these are images, not controls, so the tap-target floor does
+  not apply. The `next/image` request stays 44, so the smaller render is
+  sharper rather than softer. Note the `avatar-ring` box-shadow paints 4px
+  *outside* the box, so `getBoundingClientRect` under-reports the visual
+  footprint by 8px in each axis — that is what let the stat rail's hairline land
+  on the ring while measuring a gap of exactly 0. These are **real people who did not attend ARRS**; they are
   placeholders and are listed in the invented-data ledger.
 - **Video player** — embedded via `youtube-nocookie.com`, and the iframe is mounted only
   while the dialog is open so closing genuinely stops playback and nothing is requested

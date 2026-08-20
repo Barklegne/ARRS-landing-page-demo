@@ -142,7 +142,7 @@ export function HeroBento() {
 
         </div>
 
-        <StatRail className="mt-12 sm:mt-14 lg:mt-0" />
+        <StatRail className="mt-12 sm:mt-14 lg:mt-10" />
 
         <VideoDialog />
 
