@@ -166,6 +166,7 @@
   --ease-hero: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-wipe: cubic-bezier(0.5, 0, 0.2, 1);
   --color-placeholder: oklch(0.66 0.02 245);
+  --color-paper-tint:  oklch(0.945 0.010 242);  /* store floor <-> paper handoff */
 }
 
 @keyframes hero-rise {
@@ -460,8 +461,22 @@
     180deg,
     transparent 0%,
     color-mix(in oklab, var(--color-paper) 34%, transparent) 52%,
-    color-mix(in oklab, var(--color-paper) 82%, transparent) 80%,
-    var(--color-paper) 100%
+    color-mix(in oklab, var(--color-paper-tint) 82%, transparent) 80%,
+    var(--color-paper-tint) 100%
+  );
+}
+
+/* The paper region opens on the exact colour the store floor lands on, then
+   releases to paper over a fixed 420px so the navy above bleeds into it
+   instead of stopping at a line. Fixed length, not a percentage — the region's
+   height changes with content and a percentage would move the handoff. */
+@utility tiers-field {
+  background-color: var(--color-paper);
+  background-image: linear-gradient(
+    180deg,
+    var(--color-paper-tint) 0px,
+    color-mix(in oklab, var(--color-paper-tint) 45%, var(--color-paper)) 180px,
+    var(--color-paper) 420px
   );
 }
 /* A soft bloom directly under the front card so it lifts off the field. */

@@ -143,62 +143,49 @@ approximations; the OKLCH values are authoritative):
 `--color-paper`. Dropping its lightness to `0.55` yields 4.57:1 if you ever need
 it there.
 
-### Colour rules — enforce these
+### Colour rules
 
-1. **Yellow marks two things, and nothing else:**
+**Colour is open.** Any colour, any number of times, wherever it composes best —
+new hues, new tints, gradients, washes, accents. The palette in `@theme` is a
+starting point, not a fence, and you may extend it. There is no budget, no
+tally, and no per-surface justification to write. Earlier revisions of this file
+capped yellow at five uses in the page body and then replaced that cap with a
+two-purpose principle; **both are withdrawn.** Neither survived contact with the
+page, and taste applied per-composition beats a rule applied per-count.
 
-   1. **the primary action of a section**, and
-   2. **live personal state** — a number that belongs to the attendee.
+Use the judgment the *Design authority* grant already gives you. If a fifth
+yellow, a second accent hue, or a warm gradient makes the page better, use it
+and say what you did.
 
-   That is the whole rule. Everything decorative is disqualified by it, which is
-   what the rule is for. **The count is a consequence, not the rule** — do not
-   add a yellow surface to hit a number, and do not refuse one that genuinely
-   qualifies because a tally says five.
+**Two things are not open, because neither is a matter of taste:**
 
-   This supersedes the earlier "at most five in the page body" cap. That cap was
-   written when the store was a small white block inside the paper container; it
-   could not survive the store becoming a full-bleed brand section, and a
-   page-wide tally was never the actual design intent — it was a proxy for it.
-   A principle is also the stronger README argument: "yellow means action or
-   your own state" defends itself, "we counted to five" does not.
+1. **Contrast.** Every text/background pair must pass **WCAG AA** — 4.5:1 for
+   body text, 3:1 for text at 18.66px+ or bold 14px+, 3:1 for meaningful
+   non-text (icons, focus rings, state indicators). Measure it on the rendered
+   page against the *real composited backdrop*, not against the token you think
+   is behind it. A gradient means the backdrop changes down the element, so the
+   worst point is the one that counts. Accessibility is a judged criterion and
+   an ADA exposure for a medical society; it does not bend for a nicer hue.
 
-   As built, the page body qualifies eight times:
+   Note when measuring: `getComputedStyle` returns colours in `lab()`/`oklab()`
+   in this project, not `rgb()`. Parsing those channels as RGB produces
+   confident nonsense — white-on-navy came back as 1.03:1 once. Resolve colours
+   through a canvas, or sample the screenshot.
 
-   | surface | qualifies as |
-   |---|---|
-   | hero primary CTA | action |
-   | hero headline marker | brand emphasis — the one documented exception |
-   | CME progress ring | state |
-   | store `Shop the store` CTA | action |
-   | store active-row ordinal | state |
-   | store dwell rail | state |
-   | "My schedule" tier-one card | state |
-   | Denver 2027 band | action |
+2. **Body text is `--color-body` (navy-derived), never `#000`.** Pure black on
+   an off-white page reads as unstyled. This is the one hue opinion that stays.
 
-   The store's ordinal and dwell rail sit on the same row and read as one
-   accent, so the section presents as two marks, not three.
+**Colour must never be the only signal.** An active tab needs an underline as
+well as a colour change; an error needs a word as well as red. This is WCAG
+1.4.1, not preference.
 
-   **Light is not a surface.** A brand-tinted gradient bloom (the store's warm
-   cast under the deck) is illumination, not composition, and does not qualify
-   or disqualify under this rule.
-
-   **Chrome and overlays sit outside it entirely** — they are navigation state
-   and transient layers. That covers the ARRS logo mark, the mobile tab bar's
-   active underline, the sticky CTA bar's repeated primary at 640–1024px, the
-   skip link on focus, and the register modal's submit.
-
-   If a surface cannot be named in the "qualifies as" column, it does not get
-   yellow.
-
-2. **Body text is `--color-body` (navy-derived), never `#000`.** This single change is what separates "designed" from "default".
-3. **Text on yellow is `--color-brand-ink`** for controls, never black, never gray.
+**Text on yellow is `--color-brand-ink`** for controls, never black, never gray.
    **Exception, approved:** the hero headline marker uses `--color-ink` (navy) at
    12.08:1. On a navy field the marker must cover the full glyph height — a band
    covering only part of the cap height leaves ascenders navy-on-navy and the phrase
    becomes unreadable. This was built literally first and it failed; the full-cover
    version is correct.
-4. Every yellow/text pairing must pass **WCAG AA (4.5:1)**. Verify, do not assume.
-5. Ship a **dark mode** via `prefers-color-scheme`. The navy sections stay; the paper sections invert to `--color-ink`. The yellow is unchanged — it reads correctly on both.
+Ship a **dark mode** via `prefers-color-scheme`. The navy sections stay; the paper sections invert to `--color-ink`. The yellow is unchanged — it reads correctly on both.
 
 ---
 
@@ -695,9 +682,9 @@ Only after phase 2 is approved. Run the Definition of done checklist item by ite
 - [ ] Every string traces to `resources/reference-image.png`, the inventory, or the
       invented-data ledger — and the ledger has been reviewed for replacement
 - [ ] All twelve destinations present, grouped into three tiers
-- [ ] Yellow: every surface names what it qualifies as — a section's primary
-      action, or live personal state. Nothing decorative. Chrome and overlays
-      are outside the rule; gradient blooms are light, not surfaces
+- [ ] Colour: no budget to check. Every text/background pair passes WCAG AA
+      measured against its real composited backdrop, and no state is signalled
+      by colour alone
 - [ ] Zero `href="#"`; every route resolves
 - [ ] No horizontal scroll at 320px, and none at any tested width
 - [ ] No interactive control under 44×44
