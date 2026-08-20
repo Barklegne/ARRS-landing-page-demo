@@ -5,6 +5,7 @@ import { MeetingCommandCenter } from "@/components/sections/MeetingCommandCenter
 import { StoreSection } from "@/components/sections/StoreSection";
 import { AppSection } from "@/components/sections/AppSection";
 import { NextYearBand } from "@/components/sections/NextYearBand";
+import { FaqSection } from "@/components/sections/FaqSection";
 import { RevealFallback } from "@/components/ui/RevealFallback";
 import { tiers } from "@/lib/content";
 
@@ -25,6 +26,7 @@ export default function Home() {
         </div>
       </div>
       <NextYearBand />
+      <FaqSection />
     </main>
   );
 }

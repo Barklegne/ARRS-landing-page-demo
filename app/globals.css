@@ -30,9 +30,13 @@
     -webkit-text-size-adjust: 100%;
   }
 
+  :root {
+    color-scheme: dark;
+  }
+
   body {
-    background-color: var(--color-paper);
-    color: var(--color-body);
+    background-color: var(--color-ink);
+    color: var(--color-on-dark);
     font-family: var(--font-sans);
     font-weight: 400;
   }
@@ -81,6 +85,18 @@
   font-weight: 400;
   font-size: clamp(0.875rem, 1.6vw, 0.9375rem);
   line-height: 1.6;
+}
+
+/* The two headings that close the page. Larger than type-section because the
+   app card and the closing band each stand alone rather than titling a grid,
+   and the approved design gives them the weight the tier eyebrows do not need.
+   Still weight 500 — hierarchy here is size, not boldness. */
+@utility type-closing {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1.12;
 }
 
 @utility type-micro {
@@ -403,6 +419,12 @@
 @utility footer-field {
   background-color: var(--color-ink);
   background-image:
+    linear-gradient(
+      180deg,
+      var(--color-ink) 0px,
+      color-mix(in oklab, var(--color-ink) 55%, transparent) 70px,
+      transparent 180px
+    ),
     radial-gradient(
       66% 52% at 8% 4%,
       color-mix(in oklab, var(--color-blue) 34%, transparent) 0%,
@@ -420,8 +442,8 @@
     ),
     linear-gradient(
       180deg,
-      var(--color-ink-raised) 0px,
-      color-mix(in oklab, var(--color-ink-raised) 40%, var(--color-ink)) 240px,
+      var(--color-ink) 0px,
+      color-mix(in oklab, var(--color-ink-raised) 22%, var(--color-ink)) 240px,
       var(--color-ink) 520px
     );
 }
@@ -552,7 +574,7 @@
 @keyframes tier-rise {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(46px);
   }
 }
 
@@ -563,7 +585,7 @@
        reveal snap between two states instead of interpolating across entry. */
     animation: tier-rise linear both;
     animation-timeline: view();
-    animation-range: entry calc(5% + var(--i, 0) * 4%) cover calc(26% + var(--i, 0) * 4%);
+    animation-range: entry calc(8% + var(--i, 0) * 5%) cover calc(42% + var(--i, 0) * 5%);
   }
 }
 
@@ -572,7 +594,7 @@
    never apply without the observer that clears it. */
 [data-reveal-js] .tier-reveal {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(46px);
   transition:
     opacity 620ms var(--ease-hero),
     transform 620ms var(--ease-hero);
@@ -944,4 +966,585 @@
   .store-slot img {
     transition: none !important;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   Portal app card + closing band.
+
+   Both continue the command-centre system directly: surface-panel's four quiet
+   layers, pill-brand's badge, icon-well's rounded square. Nothing new is
+   invented here — only the two surfaces that the panels above do not have, and
+   the one CTA treatment that keeps the closing band off a solid yellow field.
+   --------------------------------------------------------------------------- */
+
+/* The app card carries a wider, warmer version of panel-glow, weighted to the
+   right so it sits behind the device rather than behind the copy. Kept under
+   the command centre's 13% so the larger surface does not read as brighter. */
+@utility app-glow {
+  background-image:
+    radial-gradient(
+      44% 92% at 88% 42%,
+      color-mix(in oklab, var(--color-brand) 10%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      70% 120% at 4% 0%,
+      color-mix(in oklab, var(--color-blue) 16%, transparent) 0%,
+      transparent 62%
+    );
+}
+
+/* App actions. Two dark surfaces one step apart, not a filled/outline pair —
+   the primary is brighter, never yellow, so no dark text is ever needed. */
+@utility app-cta {
+  color: var(--color-paper);
+  background-color: color-mix(in oklab, var(--color-paper) 10%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-paper) 20%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--color-paper) 14%, transparent);
+  transition:
+    background-color 240ms var(--ease-hero),
+    border-color 240ms var(--ease-hero),
+    translate 240ms var(--ease-hero);
+}
+@utility app-cta-quiet {
+  color: var(--color-paper);
+  background-color: color-mix(in oklab, var(--color-paper) 4%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-paper) 13%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--color-paper) 9%, transparent);
+  transition:
+    background-color 240ms var(--ease-hero),
+    border-color 240ms var(--ease-hero),
+    translate 240ms var(--ease-hero);
+}
+.app-cta:hover,
+.app-cta-quiet:hover {
+  translate: 0 -1px;
+}
+.app-cta:hover {
+  background-color: color-mix(in oklab, var(--color-paper) 14%, transparent);
+  border-color: color-mix(in oklab, var(--color-brand) 34%, transparent);
+}
+.app-cta-quiet:hover {
+  background-color: color-mix(in oklab, var(--color-paper) 8%, transparent);
+  border-color: color-mix(in oklab, var(--color-brand) 26%, transparent);
+}
+
+/* Decorative device. The frame is a shade above the card so it reads as an
+   object resting on it; the screen drops below the card so it reads as glass. */
+@utility device-frame {
+  background-color: color-mix(in oklab, var(--color-paper) 7%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-paper) 16%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--color-paper) 16%, transparent),
+    0 40px 70px -40px rgb(0 0 0 / 0.95);
+}
+@utility device-screen {
+  background-color: color-mix(in oklab, var(--color-ink) 82%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-paper) 9%, transparent);
+}
+@utility device-row {
+  background-color: color-mix(in oklab, var(--color-paper) 11%, transparent);
+}
+@utility device-row-active {
+  background-color: color-mix(in oklab, var(--color-brand) 13%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-brand) 26%, transparent);
+}
+
+/* Closing band. Opens on --color-ink, exactly where tiers-field settles, and
+   lands on --color-ink-raised, exactly where footer-field opens — so both
+   seams hold by construction rather than by tuning. The blooms are weak and
+   the floor neutralises them, because a bloom dying at a boundary shifts hue
+   while barely moving luminance. */
+@utility nextyear-field {
+  background-color: var(--color-ink);
+  background-image:
+    linear-gradient(
+      180deg,
+      var(--color-ink) 0px,
+      color-mix(in oklab, var(--color-ink) 55%, transparent) 70px,
+      transparent 180px
+    ),
+    radial-gradient(
+      52% 78% at 76% 96%,
+      color-mix(in oklab, var(--color-brand) 9%, transparent) 0%,
+      transparent 66%
+    ),
+    radial-gradient(
+      62% 96% at 12% 40%,
+      color-mix(in oklab, var(--color-blue) 22%, transparent) 0%,
+      transparent 66%
+    ),
+    var(--color-ink);
+}
+
+/* The year, set once at display scale and almost entirely submerged. It is the
+   section's own content rather than an ornament, which is the only reason a
+   decorative numeral earns its place here. */
+@utility nextyear-ghost {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(7rem, 13vw, 11rem);
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+  color: transparent;
+  background-image: linear-gradient(
+    168deg,
+    color-mix(in oklab, var(--color-paper) 17%, transparent) 0%,
+    color-mix(in oklab, var(--color-brand) 13%, transparent) 46%,
+    color-mix(in oklab, var(--color-paper) 3%, transparent) 92%
+  );
+  background-clip: text;
+  -webkit-text-stroke: 1px color-mix(in oklab, var(--color-paper) 16%, transparent);
+  filter: drop-shadow(0 18px 40px color-mix(in oklab, var(--color-brand) 12%, transparent));
+}
+
+@utility nextyear-floor {
+  background-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklab, var(--color-ink) 55%, transparent) 60%,
+    var(--color-ink) 100%
+  );
+}
+
+/* The closing CTA. A yellow-tinted dark surface, not a yellow fill: a solid
+   yellow button here would need dark text and would spend the accent on the
+   quietest moment of the page. */
+@utility cta-brand-ghost {
+  color: var(--color-brand);
+  background-color: color-mix(in oklab, var(--color-brand) 11%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-brand) 36%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--color-brand) 18%, transparent);
+  transition:
+    background-color 240ms var(--ease-hero),
+    border-color 240ms var(--ease-hero),
+    box-shadow 240ms var(--ease-hero),
+    translate 240ms var(--ease-hero);
+}
+.cta-brand-ghost:hover {
+  background-color: color-mix(in oklab, var(--color-brand) 17%, transparent);
+  border-color: color-mix(in oklab, var(--color-brand) 52%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--color-brand) 24%, transparent),
+    0 10px 30px -14px color-mix(in oklab, var(--color-brand) 40%, transparent);
+  translate: 0 -1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-cta,
+  .app-cta-quiet,
+  .cta-brand-ghost {
+    transition: none !important;
+  }
+  .app-cta:hover,
+  .app-cta-quiet:hover,
+  .cta-brand-ghost:hover {
+    translate: none !important;
+  }
+  /* The arrow's nudge is a Tailwind group-hover translate, so it needs
+     stopping at the property, not just at the transition. */
+  .cta-brand-ghost svg {
+    transition: none !important;
+  }
+  .cta-brand-ghost:hover svg {
+    translate: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   FAQ.
+
+   Sits between the closing band and the footer, both of which meet on
+   --color-ink-raised, so this field opens and lands on the same token and
+   neither seam moves. Rows, not cards: the same demotion the secondary
+   destinations use.
+   --------------------------------------------------------------------------- */
+@utility faq-field {
+  background-color: var(--color-ink);
+  background-image:
+    linear-gradient(
+      180deg,
+      var(--color-ink) 0px,
+      color-mix(in oklab, var(--color-ink) 55%, transparent) 70px,
+      transparent 190px
+    ),
+    radial-gradient(
+      64% 82% at 86% 16%,
+      color-mix(in oklab, var(--color-blue) 20%, transparent) 0%,
+      transparent 64%
+    ),
+    radial-gradient(
+      46% 62% at 4% 82%,
+      color-mix(in oklab, var(--color-brand) 6%, transparent) 0%,
+      transparent 66%
+    ),
+    var(--color-ink);
+}
+@utility faq-floor {
+  background-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklab, var(--color-ink) 55%, transparent) 58%,
+    var(--color-ink) 100%
+  );
+}
+
+@utility type-faq-q {
+  font-weight: 500;
+  font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+@utility faq-row {
+  border-bottom: 1px solid color-mix(in oklab, var(--color-paper) 10%, transparent);
+  transition: border-color 220ms var(--ease-hero);
+}
+.faq-row:first-child {
+  border-top: 1px solid color-mix(in oklab, var(--color-paper) 10%, transparent);
+}
+.faq-row:hover {
+  border-bottom-color: color-mix(in oklab, var(--color-paper) 22%, transparent);
+}
+
+@utility faq-mark {
+  color: var(--color-on-dark);
+  background-color: color-mix(in oklab, var(--color-paper) 5%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-paper) 12%, transparent);
+  transition:
+    color 220ms var(--ease-hero),
+    border-color 220ms var(--ease-hero),
+    background-color 220ms var(--ease-hero);
+}
+.faq-row:hover .faq-mark,
+.faq-row button[aria-expanded="true"] .faq-mark {
+  color: var(--color-brand);
+  border-color: color-mix(in oklab, var(--color-brand) 34%, transparent);
+  background-color: color-mix(in oklab, var(--color-brand) 11%, transparent);
+}
+
+/* 0fr -> 1fr so the panel animates to whatever height the answer needs; a
+   max-height guess clips the long ones. */
+@utility faq-panel {
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 280ms var(--ease-hero);
+}
+.faq-panel[data-open] {
+  grid-template-rows: 1fr;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-panel,
+  .faq-mark,
+  .faq-row {
+    transition: none !important;
+  }
+  .faq-mark svg {
+    transition: none !important;
+  }
+}
+
+/* The cue's dot already travels on its own 2s loop. This makes the cue react to
+   the page as well: it fades and drops away as the hero leaves the viewport, so
+   it stops inviting a scroll the reader has already made. Scroll-driven, so
+   there is no listener and no JS.
+
+   Base state is visible, and the keyframe runs toward hidden — the reverse of
+   the reveal architecture, deliberately: with no timeline support the cue
+   simply stays, which is the safe end of this particular effect. */
+@keyframes cue-dismiss {
+  to {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+
+@supports (animation-timeline: scroll(root block)) {
+  .scroll-cue {
+    animation: cue-dismiss linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 40vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue {
+    animation: none !important;
+    opacity: 1 !important;
+    translate: none !important;
+  }
+}
+
+/* Offscreen until focused, then a real control. Written as plain CSS because
+   `sr-only` + `focus:not-sr-only` both set position and clip, and the pair
+   never resolved — the link measured 1x1 with clip inset(50%) while focused. */
+.skip-link {
+  position: absolute;
+  left: 1.25rem;
+  top: 1.25rem;
+  z-index: 60;
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  border-radius: var(--radius-control);
+  background-color: var(--color-brand);
+  padding-inline: 1.25rem;
+  color: var(--color-brand-ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  translate: 0 calc(-100% - 1.5rem);
+  transition: translate 200ms var(--ease-hero);
+}
+.skip-link:focus {
+  translate: 0 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none !important;
+  }
+}
+
+/* Stub routes. They carry the header and footer like every other page, so a
+   paper ground made them read as a different product between two navy bars. */
+@utility stub-field {
+  background-color: var(--color-ink);
+  background-image:
+    linear-gradient(
+      180deg,
+      var(--color-ink) 0px,
+      color-mix(in oklab, var(--color-ink) 55%, transparent) 80px,
+      transparent 220px
+    ),
+    radial-gradient(
+      58% 84% at 84% 10%,
+      color-mix(in oklab, var(--color-blue) 20%, transparent) 0%,
+      transparent 64%
+    ),
+    radial-gradient(
+      44% 66% at 6% 88%,
+      color-mix(in oklab, var(--color-brand) 6%, transparent) 0%,
+      transparent 66%
+    ),
+    var(--color-ink);
+}
+@utility stub-floor {
+  background-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklab, var(--color-ink) 55%, transparent) 58%,
+    var(--color-ink) 100%
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   Ray, the portal assistant.
+
+   A corner widget, not a modal: it never blocks the page, so it takes Escape
+   and focus return but no focus trap and no scroll lock. The launcher clears
+   the mobile tab bar and the 640-1024 sticky CTA bar via the same offsets
+   pad-for-bottom-chrome uses.
+   --------------------------------------------------------------------------- */
+@utility ray-dock {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: calc(56px + env(safe-area-inset-bottom) + 0.75rem);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  @variant sm {
+    bottom: calc(64px + env(safe-area-inset-bottom) + 0.75rem);
+  }
+  @variant lg {
+    right: 1.5rem;
+    bottom: 1.5rem;
+  }
+}
+
+@utility ray-launcher {
+  background-color: var(--color-ink-raised);
+  box-shadow:
+    0 10px 24px -10px color-mix(in oklab, var(--color-brand) 42%, transparent),
+    0 22px 46px -16px rgb(0 0 0 / 0.92);
+  transition:
+    box-shadow 260ms var(--ease-hero),
+    translate 260ms var(--ease-hero);
+}
+.ray-launcher:hover {
+  box-shadow:
+    0 14px 32px -10px color-mix(in oklab, var(--color-brand) 60%, transparent),
+    0 28px 56px -14px rgb(0 0 0 / 0.92);
+  translate: 0 -2px;
+}
+
+/* Sits above the portrait, so the inset ring is not painted over by it: an
+   inset box-shadow renders under an element's own children. */
+@utility ray-sheen {
+  box-shadow:
+    inset 0 1.5px 0 color-mix(in oklab, white 42%, transparent),
+    inset 0 -12px 20px -12px rgb(0 0 0 / 0.55);
+}
+
+/* Blue, not yellow. The portrait's background is gold now, and a yellow dot on
+   a gold field is not a notification, it is a smudge. The navy ring keeps it
+   separated whatever it lands on. */
+@utility ray-badge {
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  box-shadow:
+    0 0 0 3px var(--color-ink),
+    0 4px 10px -3px rgb(0 0 0 / 0.7);
+}
+
+@utility ray-panel {
+  background-color: color-mix(in oklab, var(--color-ink) 97%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-paper) 13%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--color-paper) 11%, transparent),
+    0 32px 64px -28px rgb(0 0 0 / 0.9);
+  backdrop-filter: blur(18px) saturate(1.1);
+  animation: ray-in 260ms var(--ease-hero) both;
+}
+@keyframes ray-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+}
+
+@utility ray-avatar {
+  border: 1px solid color-mix(in oklab, var(--color-paper) 22%, transparent);
+  box-shadow: 0 4px 10px -4px rgb(0 0 0 / 0.6);
+}
+
+@utility ray-close {
+  color: var(--color-on-dark);
+  transition:
+    color 200ms var(--ease-hero),
+    background-color 200ms var(--ease-hero);
+}
+.ray-close:hover {
+  color: var(--color-paper);
+  background-color: color-mix(in oklab, var(--color-paper) 9%, transparent);
+}
+
+@utility ray-bubble-them {
+  background-color: color-mix(in oklab, var(--color-paper) 6%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-paper) 9%, transparent);
+}
+@utility ray-bubble-you {
+  background-color: color-mix(in oklab, var(--color-brand) 13%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-brand) 26%, transparent);
+}
+
+@keyframes ray-typing {
+  0%, 60%, 100% { opacity: 0.35; transform: translateY(0); }
+  30%           { opacity: 1;    transform: translateY(-2px); }
+}
+@utility ray-typing {
+  animation: ray-typing 1200ms ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 160ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ray-panel,
+  .ray-typing {
+    animation: none !important;
+  }
+  .ray-launcher,
+  .ray-close {
+    transition: none !important;
+  }
+  .ray-launcher:hover {
+    translate: none !important;
+  }
+}
+
+/* The resume control inside the up-next card. The card itself is a status
+   readout and no longer a link, so this is the only thing in it that acts. */
+@utility up-next-play {
+  color: var(--color-paper);
+  transition:
+    border-color 200ms var(--ease-hero),
+    background-color 200ms var(--ease-hero);
+}
+.up-next-play:hover {
+  border-color: color-mix(in oklab, var(--color-brand) 55%, transparent);
+  background-color: color-mix(in oklab, var(--color-brand) 18%, transparent);
+  color: var(--color-brand);
+}
+@media (prefers-reduced-motion: reduce) {
+  .up-next-play {
+    transition: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Assistant launcher: ring, halo, badge.
+
+   Three layers rather than a border. The ring is a conic gradient masked to a
+   2px annulus and rotated — the one motion on the page that says "assistant"
+   rather than "decoration" — over a slow halo that breathes underneath. Both
+   stop entirely under reduced motion, leaving a static ring and no glow.
+   --------------------------------------------------------------------------- */
+@keyframes ray-spin {
+  to { rotate: 1turn; }
+}
+@keyframes ray-breathe {
+  0%, 100% { opacity: 0.42; scale: 0.92; }
+  50%      { opacity: 0.8;  scale: 1.06; }
+}
+
+@utility ray-ring {
+  background-color: color-mix(in oklab, var(--color-ink) 94%, transparent);
+  background-image: conic-gradient(
+    from 0deg,
+    color-mix(in oklab, var(--color-paper) 12%, transparent) 0deg,
+    color-mix(in oklab, var(--color-brand) 96%, transparent) 54deg,
+    color-mix(in oklab, var(--color-paper) 96%, transparent) 104deg,
+    color-mix(in oklab, var(--color-blue) 70%, transparent) 150deg,
+    color-mix(in oklab, var(--color-paper) 12%, transparent) 210deg,
+    color-mix(in oklab, var(--color-paper) 12%, transparent) 360deg
+  );
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3.5px), #000 calc(100% - 3.5px));
+  animation: ray-spin 5.5s linear infinite;
+}
+
+@utility ray-halo {
+  background-image: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--color-brand) 46%, transparent) 0%,
+    color-mix(in oklab, var(--color-brand) 14%, transparent) 56%,
+    transparent 100%
+  );
+  filter: blur(3px);
+  animation: ray-breathe 4200ms ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ray-ring {
+    animation: none !important;
+  }
+  .ray-halo {
+    animation: none !important;
+    opacity: 0.5;
+    scale: 1;
+  }
+}
+
+/* Light plate under the mascot portrait on the stub routes. The photograph's
+   ground is white, so the plate owns that white deliberately instead of leaving
+   a cut-out edge on the navy. */
+@utility ray-plate {
+  background-image: radial-gradient(
+    120% 90% at 50% 8%,
+    var(--color-paper) 0%,
+    color-mix(in oklab, var(--color-brand) 16%, var(--color-paper)) 62%,
+    color-mix(in oklab, var(--color-brand) 30%, var(--color-paper)) 100%
+  );
+  border: 1px solid color-mix(in oklab, var(--color-paper) 22%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 70%, transparent),
+    0 30px 60px -28px rgb(0 0 0 / 0.9);
 }

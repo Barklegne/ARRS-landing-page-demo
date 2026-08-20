@@ -41,20 +41,18 @@ function StatRail({ className = "" }: { className?: string }) {
     <div className={`hero-rise border-t-[0.5px] pt-7 ${rule} ${className}`} style={delay(T.rail)}>
       <div className="grid grid-cols-2 sm:grid-cols-3">
         {statRail.map((stat, i) => (
-          <Link
+          <div
             key={stat.id}
-            href={stat.href}
             className={`flex flex-col gap-2 text-center sm:gap-2.5 sm:text-left ${i === 0 ? "pr-4 sm:pr-6" : `border-l-[0.5px] pl-4 sm:pl-6 ${rule}`}`}
           >
             <span className="type-micro text-on-dark">{stat.label}</span>
             <span className="font-display text-[1.875rem] leading-none text-paper sm:text-[2.125rem]">
               <CountUp value={stat.count} delay={T.figures} />
             </span>
-          </Link>
+          </div>
         ))}
 
-        <Link
-          href={cme.href}
+        <div
           className={`col-span-2 mt-7 flex flex-col items-center gap-2.5 border-t-[0.5px] pt-7 text-center sm:col-span-1 sm:mt-0 sm:items-start sm:border-t-0 sm:border-l-[0.5px] sm:pl-6 sm:pt-0 sm:text-left ${rule}`}
         >
           <span className="type-micro text-on-dark">CME progress</span>
@@ -62,13 +60,10 @@ function StatRail({ className = "" }: { className?: string }) {
             <ProgressRing claimed={cme.claimed} total={cme.total} delay={T.figures} />
             <span className="flex min-w-0 flex-col gap-0.5">
               <span className="text-[17px] leading-tight text-paper sm:text-[19px]">{cme.railLabel}</span>
-              <span className="inline-flex items-center gap-1.5 text-[15px] text-on-dark">
-                {cme.action}
-                <ArrowRight aria-hidden="true" className="size-3.5" strokeWidth={1.5} />
-              </span>
+              <span className="text-[15px] text-on-dark">{cme.railNote}</span>
             </span>
           </span>
-        </Link>
+        </div>
       </div>
     </div>
   );

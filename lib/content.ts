@@ -100,8 +100,8 @@ export const cme = {
   claimed: 18,
   total: 32,
   railLabel: "18 of 32 credits",
+  railNote: "claimed so far",
   href: "/credit",
-  action: "Claim the rest",
   // Everything the command-centre card shows is derived from claimed/total,
   // so changing either figure updates the badge, bar and remainder together.
   cardLabel: "CME CREDIT",
@@ -293,6 +293,7 @@ export const store = {
   /** Milliseconds the deck holds a product before advancing. */
   dwell: 5600,
   products: [
+    { id: "ray-merch", name: "Roentgen Ray merch", src: "/store/ray-merch.webp" },
     { id: "hoodie", name: "Hoodie", src: "/store/hoodie-navy.webp" },
     { id: "roentgen-ray-tee", name: "Roentgen Ray tee", src: "/store/roentgen-ray-tee.webp" },
     { id: "mugs", name: "Mugs", src: "/store/mugs.webp" },
@@ -311,22 +312,136 @@ export const productImage = (product: Product) =>
   product.src ??
   `https://placehold.co/1000x1250/061C2E/9AB1C6.png?text=${encodeURIComponent(product.name)}`;
 
+export const assistant = {
+  name: "Ray",
+  role: "Portal assistant",
+  avatar: "/store/ray-Mascot.webp",
+  /** Portrait used on the stub routes, beside the way back to the portal. */
+  portrait: "/store/ray-hello.webp",
+  launchLabel: "Open the portal assistant",
+  disclosure: "Scripted demo — not a live assistant.",
+  greeting: "Hi, I'm Ray. Ask me about sessions, credit or on-demand access.",
+  prompts: [
+    {
+      id: "credit",
+      q: "How many credits do I have left?",
+      a: "You've claimed 18 of 32 credits, so 14 to go. Session evaluations have to be completed before a credit is granted.",
+    },
+    {
+      id: "ondemand",
+      q: "How long can I watch sessions?",
+      a: "Every session, poster and abstract stays available on demand through April 15, 2027.",
+    },
+    {
+      id: "next",
+      q: "What's next on my schedule?",
+      a: "Advances in Abdominal Imaging, 10:30 AM in Room 301. You have 6 sessions saved across four days.",
+    },
+    {
+      id: "posters",
+      q: "How many posters are there?",
+      a: "1,860 online posters. They're not eligible for CME credit, but they're yours to browse for the full year.",
+    },
+  ],
+} as const satisfies {
+  readonly name: string;
+  readonly role: string;
+  readonly avatar: string;
+  readonly portrait: string;
+  readonly launchLabel: string;
+  readonly disclosure: string;
+  readonly greeting: string;
+  readonly prompts: readonly {
+    readonly id: string;
+    readonly q: string;
+    readonly a: string;
+  }[];
+};
+
 export const appSection = {
   eyebrow: "THE PORTAL APP",
-  heading: "Discover Roentgen 2026",
-  body: "Take the portal with you. Your schedule syncs across devices.",
+  badge: "ARRS 2026 \u00b7 IN YOUR POCKET",
+  heading: "Your meeting goes where you go.",
+  body: "Keep your schedule, sessions and meeting essentials together across devices.",
   buttons: [
     { id: "ios", label: "App Store", href: "/app/ios" },
     { id: "web", label: "Web app", href: "/app/web" },
   ],
-} as const;
+} as const satisfies {
+  readonly eyebrow: string;
+  readonly badge: string;
+  readonly heading: string;
+  readonly body: string;
+  readonly buttons: readonly {
+    readonly id: "ios" | "web";
+    readonly label: string;
+    readonly href: AppRoute;
+  }[];
+};
+
+// Verbatim from the society's own ARRS 2026 meeting page (www2.arrs.org/am26).
+// Real content, not invented — the only editing is trimming each answer to the
+// sentence that answers the question.
+export const faq = {
+  eyebrow: "BEFORE YOU GO",
+  heading: "Questions, answered.",
+  body: "The essentials on access, credit and eligibility for ARRS 2026.",
+  items: [
+    {
+      id: "what-is",
+      q: "What is the ARRS 2026 Annual Meeting?",
+      a: "The premier event for radiology professionals seeking practical, cutting-edge education to elevate their clinical practice, where the global imaging community gathers to learn from world-renowned faculty.",
+    },
+    {
+      id: "in-person",
+      q: "Do I have to attend ARRS 2026 in person?",
+      a: "No. You can join in Pittsburgh, watch online, or access sessions on demand for up to a year after the event — and switch between in person and virtual at no cost.",
+    },
+    {
+      id: "cme",
+      q: "How much CME does ARRS 2026 offer?",
+      a: "Live activities provide up to 34.50 AMA PRA Category 1 Credits and on-demand content up to 227.00. Physicians should claim only the credit commensurate with the extent of their participation.",
+    },
+    {
+      id: "who",
+      q: "Who should attend the ARRS Annual Meeting?",
+      a: "Radiologists at every career stage — residents, fellows, new attendings, mid-career and private practice radiologists, and academic radiologists presenting research.",
+    },
+    {
+      id: "register",
+      q: "When can I register for ARRS 2026?",
+      a: "Registration for ARRS 2026 is available now through the end of the meeting on April 15.",
+    },
+    {
+      id: "after",
+      q: "Can I view sessions after the meeting?",
+      a: "All registrants can access on-demand content and claim CME credits through April 15, 2027.",
+    },
+  ],
+} as const satisfies {
+  readonly eyebrow: string;
+  readonly heading: string;
+  readonly body: string;
+  readonly items: readonly {
+    readonly id: string;
+    readonly q: string;
+    readonly a: string;
+  }[];
+};
 
 export const nextYear = {
-  eyebrow: "NEXT YEAR",
-  heading: "The learning doesn't stop here",
-  body: "ARRS 2027 takes place in Denver.",
+  eyebrow: "LOOKING AHEAD \u00b7 2027",
+  heading: "The learning doesn't stop here.",
+  meeting: "ARRS 2027",
+  place: "Denver",
   cta: { label: "Save the date", href: "/save-the-date" },
-} as const;
+} as const satisfies {
+  readonly eyebrow: string;
+  readonly heading: string;
+  readonly meeting: string;
+  readonly place: string;
+  readonly cta: { readonly label: string; readonly href: AppRoute };
+};
 
 // Full list for the mobile menu, which is the only navigation on small screens.
 export const nav = [

@@ -21,34 +21,36 @@ const slots = [
 
 export function StoreDeck() {
   const [active, setActive] = useState(0);
-  const [held, setHeld] = useState(false);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  // Once someone drives the deck themselves, it stops advancing under them.
   const takeOver = useCallback((next: number) => {
     setActive(next);
-    setHeld(true);
   }, []);
 
-  // One lap, then it rests. An indefinite loop is motion with nothing left to
-  // say once you have seen all four, and it keeps pulling the eye back for the
-  // whole time the section is on screen.
-  const [lapDone, setLapDone] = useState(false);
-  const advances = useRef(0);
+  // The deck advances for as long as the section is mounted. A manual step
+  // resets the dwell rather than ending it, so driving it yourself only ever
+  // buys you a full interval on the card you chose.
+  const [reduced, setReduced] = useState(false);
+  // Pointer/focus pause only — it resumes on leave. WCAG 2.2.2 wants moving
+  // content to be pausable; ending the loop outright is a different thing.
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (held || lapDone) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduced(query.matches);
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
 
-    const id = window.setInterval(() => {
-      advances.current += 1;
-      setActive((i) => (i + 1) % count);
-      if (advances.current >= count) setLapDone(true);
-    }, store.dwell);
-    return () => window.clearInterval(id);
-  }, [held, lapDone]);
+  useEffect(() => {
+    if (reduced || paused) return;
+    // Keyed on `active`, so every advance — auto or manual — restarts the clock.
+    const id = window.setTimeout(() => setActive((i) => (i + 1) % count), store.dwell);
+    return () => window.clearTimeout(id);
+  }, [active, reduced, paused]);
 
-  const resting = held || lapDone;
+  const resting = reduced || paused;
 
   // Horizontal drag/swipe on the stage. Vertical intent is left alone so the
   // page still scrolls through the card — hence touch-action: pan-y and the
@@ -64,7 +66,6 @@ export function StoreDeck() {
   // stale index, so a rapid double-tap on Previous moved one step, not two.
   const step = useCallback((direction: 1 | -1) => {
     setActive((i) => (i + direction + count) % count);
-    setHeld(true);
   }, []);
 
   const onPointerUp = (event: React.PointerEvent) => {
@@ -129,7 +130,7 @@ export function StoreDeck() {
               <div
                 key={product.id}
                 inert={!isActive}
-                className={`store-slot absolute inset-y-0 left-0 w-[76%] ${slots[slot]}`}
+                className={`store-slot absolute inset-y-0 left-0 w-[76%] ${slots[Math.min(slot, slots.length - 1)]}`}
               >
                 <Link
                   href={store.cta.href}
@@ -176,7 +177,7 @@ export function StoreDeck() {
           type="button"
           onClick={() => step(-1)}
           aria-label="Previous product"
-          className="deck-nav flex size-11 items-center justify-center rounded-full"
+          className="deck-nav flex size-11 shrink-0 items-center justify-center rounded-full"
         >
           <ChevronLeft aria-hidden="true" className="size-5" strokeWidth={1.5} />
         </button>
@@ -184,7 +185,7 @@ export function StoreDeck() {
           type="button"
           onClick={() => step(1)}
           aria-label="Next product"
-          className="deck-nav flex size-11 items-center justify-center rounded-full"
+          className="deck-nav flex size-11 shrink-0 items-center justify-center rounded-full"
         >
           <ChevronRight aria-hidden="true" className="size-5" strokeWidth={1.5} />
         </button>
@@ -204,8 +205,10 @@ export function StoreDeck() {
         aria-label="ARRS store products"
         aria-orientation="vertical"
         onKeyDown={onKeyDown}
-        onMouseEnter={() => setHeld(true)}
-        onFocus={() => setHeld(true)}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
         className="sr-only md:not-sr-only md:flex md:w-full md:flex-col md:max-w-[20rem] lg:max-w-[22rem]"
       >
         {products.map((product, i) => {

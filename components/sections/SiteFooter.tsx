@@ -20,7 +20,7 @@ function FooterAnchor({ link }: { link: FooterLink }) {
 
 export function SiteFooter() {
   return (
-    <footer className="footer-field relative isolate overflow-hidden text-paper">
+    <footer className="footer-field relative isolate overflow-clip text-paper">
       <span aria-hidden="true" className="footer-mark pointer-events-none absolute inset-0" />
       <span aria-hidden="true" className="grain pointer-events-none absolute inset-0" />
       <span
@@ -30,7 +30,7 @@ export function SiteFooter() {
 
       <div className="relative mx-auto max-w-[1200px] px-5 py-14 lg:py-20">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
-          <div className="flex flex-col gap-6 lg:max-w-[26rem]">
+          <div data-reveal="" className="tier-reveal flex flex-col gap-6 lg:max-w-[26rem]">
             <div className="flex items-center gap-3.5">
               <ArrsLogo className="size-10 shrink-0" />
               <span className="flex flex-col">
@@ -60,7 +60,9 @@ export function SiteFooter() {
 
           <nav
             aria-label="Footer"
-            className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:gap-x-14"
+            data-reveal=""
+            style={{ "--i": 1 } as React.CSSProperties}
+            className="tier-reveal grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:gap-x-14"
           >
             {footer.columns.map((column) => (
               <div
@@ -68,7 +70,7 @@ export function SiteFooter() {
                 className={`flex-col gap-3 ${column.hideBelowMd ? "hidden md:flex" : "flex"}`}
               >
                 <h2 className="type-micro text-on-dark/85">{column.title}</h2>
-                <ul className="flex flex-col gap-0.5">
+                <ul className="grid grid-cols-2 gap-x-6 gap-y-0.5 md:grid-cols-1">
                   {column.links.map((link) => (
                     <li key={link.id}>
                       <FooterAnchor link={link} />
@@ -80,8 +82,8 @@ export function SiteFooter() {
           </nav>
         </div>
 
-        <div className="mt-12 flex flex-col gap-6 border-t border-ink-line pt-8 sm:mt-14 md:flex-row md:items-center md:justify-between">
-          <ul className="flex flex-wrap items-center gap-2">
+        <div className="mt-12 flex flex-col items-center gap-6 border-t border-ink-line pt-8 text-center sm:mt-14 md:flex-row md:items-center md:justify-between md:text-left">
+          <ul className="flex flex-wrap items-center justify-center gap-2">
             {footer.social.map((profile) => (
               <li key={profile.id}>
                 <a
@@ -100,7 +102,7 @@ export function SiteFooter() {
           <p className="type-micro text-on-dark/70">{meeting.formats}</p>
         </div>
 
-        <div className="mt-8 flex flex-col gap-2 border-t border-ink-line pt-6 text-on-dark/85 md:flex-row md:items-center md:justify-between">
+        <div className="mt-8 flex flex-col items-center gap-2 border-t border-ink-line pt-6 text-center text-on-dark/85 md:flex-row md:items-center md:justify-between md:text-left">
           <p className="text-[0.8125rem]">{footer.legal}</p>
           <p className="type-micro">{meeting.place}</p>
         </div>

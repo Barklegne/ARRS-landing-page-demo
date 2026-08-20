@@ -27,7 +27,7 @@ export function ScrollCue() {
       type="button"
       onClick={goToNextSection}
       aria-label="Scroll to the next section"
-      className="group inline-flex cursor-pointer items-center justify-center rounded-full border-[0.5px] border-transparent px-3 py-2 transition-colors duration-200 hover:border-paper/15 hover:bg-paper/[0.06]"
+      className="scroll-cue group inline-flex cursor-pointer items-center justify-center rounded-full border-[0.5px] border-transparent px-3 py-2 transition-colors duration-200 hover:border-paper/15 hover:bg-paper/[0.06]"
     >
       <span
         aria-hidden="true"

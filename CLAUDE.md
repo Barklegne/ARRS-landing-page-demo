@@ -210,8 +210,14 @@ well as a colour change; an error needs a word as well as red. This is WCAG
 **Dark mode needs rethinking, and the plan below is now stale.** It read: "the
 navy sections stay; the paper sections invert to `--color-ink`." The landing
 page no longer has paper sections — hero, ticker, store, all three destination
-tiers, the app section and the footer are navy, with the Denver band the single
-bright interruption. There is nothing left to invert.
+tiers, the app section, the Denver band and the footer are all navy. There is
+nothing left to invert.
+
+The Denver band is no longer the bright interruption: the full-bleed yellow
+field was replaced with a raised-navy closing band, on the same grounds as the
+yellow "My schedule" card before it — a page-height yellow surface forces dark
+text and spends the accent on the quietest moment on the page. Yellow now
+appears there only in the badge, the separator dot and the CTA's tint.
 
 Two honest options, neither yet chosen:
 
@@ -332,17 +338,33 @@ Awardees · Donor wall · Sponsors
   instead of treating the store as a bolt-on.
 - Body: `Roentgen Ray apparel, mugs, and RADRES merch.`
 - CTA: `Shop the store`
-- Products: Hoodie · Roentgen Ray tee · Mugs · RADRES tee
+- Products: Roentgen Ray merch · Hoodie · Roentgen Ray tee · Mugs · RADRES tee
+  (five, and the deck has four depth slots — anything past the deepest reuses
+  it, which is the `opacity-0` one, so the stack stays three cards at any count)
 
-**App section**
-- Heading: `Discover Roentgen 2026`
-- Body: `Take the portal with you. Your schedule syncs across devices.`
-- Buttons: `App Store` · `Web app`
+**App section** — copy replaced against a supplied reference, approved. The
+inventory previously read `Discover Roentgen 2026` / `Take the portal with you.
+Your schedule syncs across devices.` The heading named a product the page never
+otherwise mentions and the body restated the heading; the replacement says what
+the app is for. `Discover Roentgen 2026` is the one real string this drops — it
+came from the screenshot, and it is available to fold back into the badge if the
+society wants the app's own name on the page.
+- Eyebrow: `THE PORTAL APP`
+- Badge: `ARRS 2026 · IN YOUR POCKET`
+- Heading: `Your meeting goes where you go.`
+- Body: `Keep your schedule, sessions and meeting essentials together across devices.`
+- Buttons: `App Store` · `Web app` — the reference read `Open Web App`, which is
+  title case and would have been the only title-cased control on the page.
+  Sentence case wins; the label is otherwise unchanged.
 
-**Closing band**
-- Eyebrow: `NEXT YEAR`
-- Heading: `The learning doesn't stop here`
-- Body: `ARRS 2027 takes place in Denver.`
+**Closing band** — copy re-cut against the same reference, approved. `NEXT YEAR`
+became a badge rather than an eyebrow because the band no longer titles a grid,
+and `ARRS 2027 takes place in Denver.` split into two fields so the meeting and
+the city can carry different weights on one line.
+- Badge: `LOOKING AHEAD · 2027`
+- Heading: `The learning doesn't stop here.`
+- Meeting / place: `ARRS 2027` (paper) · yellow dot · `Denver` (on-dark)
+- Support: `Continue the experience next year.`
 - CTA: `Save the date`
 
 **Footer**
@@ -376,6 +398,8 @@ without asking.
 | Ticker session titles | four generic strings | as permitted above |
 | Player video | a YouTube ID | stands in for real session media |
 | Next saved session | `10:30 AM · ROOM 301`, `Advances in Abdominal Imaging` | invented; `scheduleNext` in `lib/content.ts`. Distinct from `upNext`, which is the hero's resume card |
+| Ray, the portal assistant | scripted launcher + 4 canned replies | **not a model.** Every answer restates a figure already on the page (18/32 credits, Apr 15 2027, the saved session, 1,860 posters) so the widget cannot state anything the page does not. The panel header says `Scripted demo — not a live assistant`; that line is load-bearing and must not be removed |
+| Ray mascot / merch photography | 2 generated images | **invented ARRS mascot and merchandise** — no such plush, mug or keyring exists. The portrait's ground is gold. The unread badge is `--color-paper` with a 3px `--color-ink` ring — brand-on-gold is invisible, and blue sits too close to the page's own navy. The ring is load-bearing, not decoration: the badge fill measures **15.77:1** against the navy page but **1.14:1** against the portrait's gold highlight, so over the portrait the ring is the only thing defining it. Measured around the full circumference: fill-vs-ring never drops below **16.32:1**. Replacing either image needs `rm -rf .next` — the optimizer caches by source URL and Turbopack keeps a second cache |
 | Store product imagery | 4 generated mockups | **invented ARRS wordmark and merchandise** — not real product |
 
 ---
@@ -388,17 +412,53 @@ Build in this order. Each is its own component under `components/sections/`.
 2. `HeroBento` — headline, CTAs, avatars, up-next card, search, stat rail
 3. `SessionTicker` — marquee strip
 4. `StoreSection` + `StoreDeck` — **sits directly after the ticker**, above the
-   tiers. A depth-stacked product deck: swipeable, prev/next, one auto-advance
-   lap then rest. Full-bleed navy.
+   tiers. A depth-stacked product deck: swipeable, prev/next, advancing
+   indefinitely. The timer is keyed on the active index, so a manual step resets
+   the dwell rather than ending the loop. Pointer and focus pause it and it
+   resumes on leave — WCAG 2.2.2 wants moving content pausable, which is a
+   different thing from stopping it. Full-bleed navy.
 5. `MeetingCommandCenter` — the two `YOUR MEETING` panels. Bespoke rather than
    data-driven: they are the only two destinations whose content is personal
    state rather than a name and a count.
 6. `DestinationTier` × 3 — one component, three component *types* from
    `tier.display`: `discovery` cards, `row` navigation, `chip` strip.
-7. `AppSection`
-8. `NextYearBand`
-9. `SiteFooter`
-10. `MobileTabBar` — mobile only, fixed bottom
+7. `AppSection` — one large card on the tiers field: badge, heading, body, the
+   two store actions, and a CSS-only device mock (decorative, `aria-hidden`,
+   hidden below `lg`). No image asset.
+8. `NextYearBand` — the closing band. Full-bleed deep navy, not yellow, and it
+   now stays on `--color-ink` end to end so the deep navy runs unbroken from the
+   tiers into the FAQ. Its character comes from three quiet things rather than a
+   surface treatment: grain, an outlined `2027` set in the gap between the two
+   columns (`-webkit-text-stroke` at 11% — filled at low opacity it read as a
+   smudge, and clipped at an edge it read as stray arcs), and a brand-coloured
+   full stop on the heading. The year is the right column's own subject — a
+   gradient fill under a hairline outline, with the CTA hung off its right edge —
+   rather than a wash behind the copy; the supporting sentence that used to sit
+   there was cut. No rule along its top edge: a beam there is a divider by
+   another name.
+9. `FaqSection` — six rows, verbatim from the society's own meeting page. The
+   remaining five answers are still on that page; they were cut because a long
+   accordion above a footer reads as a dumping ground, not because they are
+   wrong.
+   Hand-rolled accordion (`<details>` does not collapse in this Chrome build):
+   button + `aria-expanded` + `role="region"`, `inert` when closed, and a
+   `grid-template-rows: 0fr -> 1fr` panel so no `max-height` guess can clip a
+   long answer. Opens and lands on `--color-ink-raised`, between the closing
+   band and the footer. It opens on `--color-ink` with the sections above it and
+   carries the single ramp up to `--color-ink-raised` for the footer — the flat
+   `ink-raised` slab it started as read lighter and cheaper than its neighbours.
+   The toggle swaps plus for minus; a rotated plus is an X, which reads as
+   dismiss rather than collapse.
+10. `SiteFooter`
+11. `MobileTabBar`
+12. `RayAssistant` — a conic-gradient ring masked to a 3.5px annulus over a
+    navy backing, rotating on a 5.5s loop, above a slow warm halo. Both stop
+    dead under reduced motion, leaving a static bezel and no glow. Mounted in
+    the layout, not the page, so it follows you onto
+    the stub routes. A corner widget rather than a modal: Escape and focus
+    return, but no focus trap and no scroll lock, because it never blocks the
+    page. The launcher clears the tab bar and the sticky CTA bar using the same
+    offsets as `pad-for-bottom-chrome`. — mobile only, fixed bottom
 
 Order note: the store precedes the twelve destinations. That is a commercial
 placement the client asked for and it partly reverses diagnosis point three —
@@ -617,7 +677,16 @@ Treat this as a feature and document it. A radiology society is ADA-sensitive; m
 
 - Semantic landmarks: one `<h1>`, correct heading order, `<nav>` / `<main>` / `<footer>`.
 - Visible focus rings using `--color-blue`, `outline-offset: 2px`. Never `outline: none` without a replacement.
+  **Open defect:** now that the page is navy end to end, that ring measures
+  **1.97–2.65:1** against the surfaces it lands on — under the 3:1 WCAG 1.4.11
+  floor for non-text indicators. It passed when the ring sat on paper. The fix
+  is page-wide (every focusable element), so it has not been applied
+  unilaterally: either lift `--color-blue` for the dark page or pair the blue
+  outline with a `--color-paper` outer ring so it reads on both grounds.
 - Full keyboard operability, including the mobile menu (focus trap, Escape to close, focus restored on close).
+  The skip link is plain CSS, not `sr-only` + `focus:not-sr-only`: both set
+  `position` and `clip`, the pair never resolved, and the link measured 1x1 with
+  `clip: inset(50%)` while focused. It now measures 148x44 on a real Tab.
 - Colour is never the only signal — the active tab has an underline, not just a colour change.
 - The ticker is `aria-hidden` (it is ambient); its content is reachable through the sessions page.
 - Run Lighthouse and axe. Target 100 on accessibility. Put the score in the README.
@@ -715,6 +784,24 @@ emulation, and LCP/CLS. Use it for:
   `clipPath`, and final numerals. Toggle the setting, never read the CSS.
 - **Dialogs** — `:modal`, focus inside on open, real `Escape` keypress, focus restored
 - **Animation** — sample `getComputedStyle` across the window to prove interpolation
+- **Matching the seam pixel is not the same as matching the field.** Three
+  sections can each join their neighbour within `d(b-r) = 1` and still read as
+  different tones, because each carries its own internal ramp. Sample the middle
+  of each field as well as the boundary: the closing band, the FAQ and the footer
+  measured `[12,29,46]`, `[13,30,47]`, `[16,32,50]` mid-section only after they
+  were all put on one continuous `--color-ink` ground.
+- **A `scale()` in a reveal shrinks every control inside it.** `getBoundingClientRect`
+  returns the scaled box, so a `scale(0.985)` reveal put a 44px button at 43px for
+  the length of the animation and lit up the whole tap-target audit. Travel and
+  opacity are enough.
+- **`view()` resolves against the nearest scroll container, and `overflow: hidden`
+  is one.** Any reveal inside an `overflow-hidden` section reads a constant
+  derived from its offset within that section, never from page scroll. It looks
+  plausible — the FAQ rows measured a tidy `0.93 / 0.80 / 0.66 / 0.53 / 0.39 /
+  0.26` ramp — and it never completes at any scroll position. The same bug froze
+  the hero's scroll cue. Use `overflow: clip`, which clips identically without
+  becoming a scroll container, or move the subject out. Check by scrolling the
+  element to rest and asserting opacity reaches 1, not by watching it fade in.
 - **Scroll-driven animation** — sample the animated property while *scrolling*,
   not while hovering or waiting. A snap and a smooth reveal report identical
   computed styles at rest; only stepping the scroll position apart reveals
@@ -759,7 +846,9 @@ Stop and report:
 > - **Store** — complete. Deck, swipe, controls, real artwork, one-lap advance.
 > - **Destination tiers** — complete, on navy, with scroll reveals and counters.
 > - **Footer** — complete.
-> - **App section / Denver band** — restyled for navy, otherwise Phase 1.
+> - **App section / Denver band** — complete. Rebuilt against a supplied
+>   reference into a single portal-app card with a decorative device mock, and a
+>   raised-navy closing band. Both continue the command-centre surface system.
 > - **Outstanding:** the theming decision below, an `axe`/Lighthouse pass, and
 >   the README.
 

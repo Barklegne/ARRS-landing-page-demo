@@ -11,11 +11,13 @@ export function PlayLink({
   className = "",
   style,
   children,
+  "aria-label": ariaLabel,
 }: {
   href: AppRoute;
   className?: string;
   style?: React.CSSProperties;
   children: React.ReactNode;
+  "aria-label"?: string;
 }) {
   return (
     <Link
@@ -26,6 +28,7 @@ export function PlayLink({
       }}
       className={className}
       style={style}
+      aria-label={ariaLabel}
     >
       {children}
     </Link>

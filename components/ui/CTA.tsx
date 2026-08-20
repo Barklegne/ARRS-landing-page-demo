@@ -12,7 +12,6 @@ const variants = {
   glass: `${base} cta-glass h-12 px-6 hover:border-paper/40`,
   ghost: `${base} cta-ghost min-h-11 px-1 hover:text-paper`,
   secondary: `${base} h-11 border border-ink-line px-5 text-paper`,
-  onBrand: `${base} h-11 bg-ink px-5 text-paper`,
 } as const;
 
 export function CTA({
