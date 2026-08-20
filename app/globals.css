@@ -400,3 +400,86 @@
     0 0 0 1.5px color-mix(in oklab, var(--color-paper) 42%, transparent),
     0 0 0 4px var(--color-ink);
 }
+
+/* ---------------------------------------------------------------------------
+   Store showcase.
+
+   The section is a navy field rather than a white block so it reads as a
+   continuation of the hero canvas instead of an interruption before the
+   portal's own contents. No yellow here — the page-body budget is already
+   spent, and a yellow CTA in a merch section is exactly the emphasis the
+   redesign argues against.
+   --------------------------------------------------------------------------- */
+
+@utility store-field {
+  background-image:
+    radial-gradient(
+      118% 88% at 76% 14%,
+      color-mix(in oklab, var(--color-paper) 14%, transparent) 0%,
+      transparent 62%
+    ),
+    radial-gradient(
+      88% 68% at 6% 94%,
+      color-mix(in oklab, var(--color-blue) 32%, transparent) 0%,
+      transparent 58%
+    ),
+    linear-gradient(168deg, var(--color-ink-raised) 0%, var(--color-ink) 56%);
+}
+
+/* A soft bloom directly under the front card so it lifts off the field. */
+@utility store-halo {
+  background-image: radial-gradient(
+    58% 46% at 44% 52%,
+    color-mix(in oklab, var(--color-paper) 20%, transparent) 0%,
+    transparent 70%
+  );
+  filter: blur(28px);
+}
+
+@utility store-card {
+  border: 0.5px solid color-mix(in oklab, var(--color-paper) 20%, transparent);
+  background-color: color-mix(in oklab, var(--color-ink) 70%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--color-paper) 16%, transparent),
+    0 32px 60px -32px color-mix(in oklab, black 90%, transparent);
+}
+
+/* Depth transition. Slots carry transform/opacity only, so the whole deck
+   animates by re-assigning classes — no keyframes, and the global
+   reduced-motion block already collapses it to an instant swap. */
+/* Tailwind v4 compiles `translate-x-*` / `scale-*` to the INDEPENDENT
+   `translate` and `scale` properties, not the `transform` shorthand —
+   `transform` computes to `none` here, so transitioning it silently does
+   nothing and the deck cross-fades in place. Verified by sampling
+   getComputedStyle across the window. */
+@utility store-slot {
+  transition:
+    translate 620ms var(--ease-hero),
+    scale 620ms var(--ease-hero),
+    opacity 620ms var(--ease-hero);
+}
+
+/* Dwell indicator on the active index row. It exists to tell you the deck is
+   about to advance — motion that reports state rather than decorating it. */
+@keyframes store-dwell {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@utility store-dwell {
+  transform-origin: left;
+  animation: store-dwell var(--store-dwell, 5600ms) linear both;
+}
+
+/* This codebase overrides motion per utility rather than with a blanket `*`
+   rule, because the hero deliberately keeps a 320ms fade that a blanket
+   animation-duration override would destroy. Every store effect is listed. */
+@media (prefers-reduced-motion: reduce) {
+  .store-dwell {
+    animation: none !important;
+    transform: scaleX(1);
+  }
+  .store-slot,
+  .store-slot img {
+    transition: none !important;
+  }
+}

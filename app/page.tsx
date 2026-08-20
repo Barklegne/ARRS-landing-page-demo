@@ -11,11 +11,11 @@ export default function Home() {
     <main id="main">
       <HeroBento />
       <SessionTicker />
+      <StoreSection />
       <div className="mx-auto flex max-w-[1200px] flex-col gap-14 px-5 py-14 lg:gap-16 lg:py-16">
         {tiers.map((tier) => (
           <DestinationTier key={tier.id} tier={tier} />
         ))}
-        <StoreSection />
         <AppSection />
       </div>
       <NextYearBand />

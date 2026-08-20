@@ -219,21 +219,41 @@ export const tiers: readonly Tier[] = [
   },
 ];
 
+export interface Product {
+  readonly id: string;
+  readonly name: string;
+  /**
+   * Local 4:5 artwork under `public/store/`. Left undefined until real
+   * photography exists, which falls the card back to a labelled placeholder.
+   */
+  readonly src?: string;
+}
+
 export const store = {
   eyebrow: "THE ARRS STORE",
   heading: "Your community. Your gear.",
   body: "Roentgen Ray apparel, mugs, and RADRES merch.",
   cta: { label: "Shop the store", href: "/store" },
+  /** Milliseconds the deck holds a product before advancing. */
+  dwell: 5600,
   products: [
     { id: "hoodie", name: "Hoodie" },
     { id: "roentgen-ray-tee", name: "Roentgen Ray tee" },
     { id: "mugs", name: "Mugs" },
     { id: "radres-tee", name: "RADRES tee" },
   ],
-} as const;
+} as const satisfies {
+  readonly eyebrow: string;
+  readonly heading: string;
+  readonly body: string;
+  readonly cta: { readonly label: string; readonly href: AppRoute };
+  readonly dwell: number;
+  readonly products: readonly Product[];
+};
 
-export const productImage = (name: string) =>
-  `https://placehold.co/480x600/061C2E/9AB1C6.png?text=${encodeURIComponent(name)}`;
+export const productImage = (product: Product) =>
+  product.src ??
+  `https://placehold.co/1000x1250/061C2E/9AB1C6.png?text=${encodeURIComponent(product.name)}`;
 
 export const appSection = {
   eyebrow: "THE PORTAL APP",
