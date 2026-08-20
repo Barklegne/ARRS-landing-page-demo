@@ -100,15 +100,16 @@ export function StoreDeck() {
                     sizes="(min-width: 1024px) 26rem, 76vw"
                     className="object-cover transition-transform duration-700 ease-[var(--ease-hero)] group-hover:scale-[1.03]"
                   />
+                  {/* The name is already the index row two columns left, so
+                      printing it again here was redundant. The link keeps its
+                      aria-label, so nothing is lost for assistive tech. A dark
+                      chip rather than a bare icon, because the artwork behind
+                      it ranges from near-black navy to brand yellow. */}
                   <span
                     aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 bg-linear-to-t from-ink/85 to-transparent px-4 pt-12 pb-4"
+                    className="absolute top-3 right-3 flex size-9 items-center justify-center rounded-full bg-ink/65 text-paper backdrop-blur-sm transition-colors duration-200 group-hover:bg-ink/85"
                   >
-                    <span className="type-card text-paper">{product.name}</span>
-                    <ArrowUpRight
-                      className="size-4 shrink-0 text-on-dark"
-                      strokeWidth={1.5}
-                    />
+                    <ArrowUpRight className="size-4" strokeWidth={1.5} />
                   </span>
                 </Link>
               </div>
