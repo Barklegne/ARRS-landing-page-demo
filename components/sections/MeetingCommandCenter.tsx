@@ -108,7 +108,7 @@ function CreditCard() {
 
 export function MeetingCommandCenter() {
   return (
-    <section aria-labelledby="your-meeting-eyebrow">
+    <section id="your-meeting" aria-labelledby="your-meeting-eyebrow">
       <Eyebrow id="your-meeting-eyebrow" as="h2" tone="dark">
         YOUR MEETING
       </Eyebrow>

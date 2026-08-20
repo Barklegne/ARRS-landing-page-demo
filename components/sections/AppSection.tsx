@@ -37,7 +37,7 @@ function DeviceMock() {
 
 export function AppSection() {
   return (
-    <section aria-labelledby="app-eyebrow">
+    <section id="portal-app" aria-labelledby="app-eyebrow">
       <Eyebrow id="app-eyebrow" tone="dark">
         {appSection.eyebrow}
       </Eyebrow>

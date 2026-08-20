@@ -7,6 +7,7 @@ import { store } from "@/lib/content";
 export function StoreSection() {
   return (
     <section
+      id="store"
       aria-labelledby="store-eyebrow"
       className="store-field relative isolate overflow-clip text-paper"
     >

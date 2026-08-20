@@ -6,13 +6,13 @@ import { StoreSection } from "@/components/sections/StoreSection";
 import { AppSection } from "@/components/sections/AppSection";
 import { NextYearBand } from "@/components/sections/NextYearBand";
 import { FaqSection } from "@/components/sections/FaqSection";
-import { RevealFallback } from "@/components/ui/RevealFallback";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { tiers } from "@/lib/content";
 
 export default function Home() {
   return (
     <main id="main">
-      <RevealFallback />
+      <ScrollReveal />
       <HeroBento />
       <SessionTicker />
       <StoreSection />

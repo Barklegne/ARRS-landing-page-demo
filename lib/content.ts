@@ -14,6 +14,10 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+/** In-page anchors on the landing page. Absolute, so the header works from a
+ *  stub route too — it navigates home and lands on the section. */
+export type SectionAnchor = "/#store" | "/#your-meeting" | "/#portal-app";
+
 export type AppRoute =
   | "/"
   | "/watch"
@@ -443,17 +447,32 @@ export const nextYear = {
   readonly cta: { readonly label: string; readonly href: AppRoute };
 };
 
-// Full list for the mobile menu, which is the only navigation on small screens.
+// The header navigates the page itself rather than jumping to stub routes:
+// each entry lands on the section that already carries that subject. Home
+// returns to the top, which is also the route these anchors resolve against.
+export const headerNav = [
+  { id: "home", label: "Home", href: "/" },
+  { id: "store", label: "Store", href: "/#store" },
+  { id: "schedule", label: "Schedule", href: "/#your-meeting" },
+  { id: "download", label: "Download", href: "/#portal-app" },
+] as const satisfies readonly {
+  readonly id: string;
+  readonly label: string;
+  readonly href: AppRoute | SectionAnchor;
+}[];
+
+// The mobile menu shows the same four, then the destinations that have no
+// section of their own on the landing page.
 export const nav = [
+  ...headerNav,
   { id: "sessions", label: "Sessions", href: "/sessions" },
   { id: "posters", label: "Online posters", href: "/posters" },
-  { id: "schedule", label: "My schedule", href: "/schedule" },
   { id: "credit", label: "Claim credit", href: "/credit" },
-] as const;
-
-// Desktop header keeps only the two browse destinations; schedule and credit
-// are already the two most prominent cards in the tier below.
-export const headerNav = nav.slice(0, 2);
+] as const satisfies readonly {
+  readonly id: string;
+  readonly label: string;
+  readonly href: AppRoute | SectionAnchor;
+}[];
 
 
 export const tabs = [

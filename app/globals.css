@@ -571,38 +571,34 @@
    Stagger comes from shifting each card's animation-range by its index rather
    than from animation-delay, which scroll-driven timelines ignore.
    --------------------------------------------------------------------------- */
-@keyframes tier-rise {
-  from {
-    opacity: 0;
-    transform: translateY(46px);
-  }
-}
+/* One shot, on entry, and it never reverts.
 
-@supports (animation-timeline: view()) {
-  .tier-reveal {
-    /* No time duration. A scroll-driven animation needs animation-duration:
-       auto so the keyframes map onto animation-range; giving it 1ms made the
-       reveal snap between two states instead of interpolating across entry. */
-    animation: tier-rise linear both;
-    animation-timeline: view();
-    animation-range: entry calc(8% + var(--i, 0) * 5%) cover calc(42% + var(--i, 0) * 5%);
-  }
-}
+   This was a scroll-driven animation scrubbed against `view()`. That is the
+   wrong model for a reveal: the keyframes are tied to scroll position, so a
+   block taller than the trigger window sits at partial opacity for the whole
+   time it is partly off-screen — it reads as a greyed-out section rather than
+   as an entrance — and scrolling back up plays it in reverse. A reveal happens
+   once.
 
-/* IntersectionObserver path, only for browsers without the timeline. The
-   hidden start state is scoped to the flag RevealFallback sets, so it can
-   never apply without the observer that clears it. */
+   So an IntersectionObserver fires a plain time-based transition and then
+   unobserves. The hidden start state is scoped to the flag the observer's own
+   component sets, so with no JS the base state stays the finished one and
+   nothing can be stranded invisible.
+ */
+
 [data-reveal-js] .tier-reveal {
   opacity: 0;
-  transform: translateY(46px);
+  transform: translateY(34px);
   transition:
     opacity 620ms var(--ease-hero),
-    transform 620ms var(--ease-hero);
-  transition-delay: calc(var(--i, 0) * 60ms);
+    transform 720ms var(--ease-hero);
+  transition-delay: calc(var(--i, 0) * 70ms);
+  will-change: opacity, transform;
 }
 [data-reveal-js] .tier-reveal.is-revealed {
   opacity: 1;
   transform: none;
+  will-change: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1547,4 +1543,48 @@
   box-shadow:
     inset 0 1px 0 color-mix(in oklab, white 70%, transparent),
     0 30px 60px -28px rgb(0 0 0 / 0.9);
+}
+
+/* Anchor targets clear the sticky header, plus a little air. Without this the
+   header covers the eyebrow of whichever section you jumped to. */
+#store,
+#your-meeting,
+#portal-app {
+  scroll-margin-top: 6rem;
+}
+
+/* Native smooth scrolling for the header's in-page links. CSS, not a library —
+   scroll-jacking on a mobile UX submission is a self-inflicted wound, and this
+   only changes the easing of a jump the reader asked for. Off under reduced
+   motion, where it becomes an instant jump. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* The active section's marker. It grows from the centre so moving between
+   sections reads as one indicator travelling rather than four blinking. */
+@utility nav-underline {
+  background-color: var(--color-brand);
+  scale: 0 1;
+  opacity: 0;
+  transition:
+    scale 260ms var(--ease-hero),
+    opacity 260ms var(--ease-hero);
+}
+.nav-underline[data-on] {
+  scale: 1 1;
+  opacity: 1;
+}
+
+@utility nav-link {
+  transition: color 200ms var(--ease-hero);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-underline,
+  .nav-link {
+    transition: none !important;
+  }
 }
