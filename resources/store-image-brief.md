@@ -268,6 +268,18 @@ navy ground, just a taller frame with the two mugs arranged to fill it. Then
 delete the `fit` and `ground` fields from the mugs entry in `lib/content.ts`
 and it goes back to filling the card like the rest.
 
+### Exact wording to give the image model
+
+> Portrait orientation, **taller than wide**. Aspect ratio **4:5**, output
+> **1122 × 1402 pixels** (or 1600 × 2000 / 2000 × 2500 — same ratio, larger).
+> The previous version came back 1402 × 1122, which is landscape and was
+> cropped losing both mug handles.
+>
+> Same two ARRS mugs, same near-black navy studio ground, same soft key light
+> from the upper left. Arrange them to fill the taller frame — slightly
+> overlapping, handles turned outward and fully inside the frame with clear
+> margin. Keep the bottom ~15% quiet. No text added, no props, no ground plane.
+
 ## If images ever look unchanged after replacing them
 
 Next's image optimizer caches by source URL, and the URL does not change when

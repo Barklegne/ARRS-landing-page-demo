@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { AppRoute } from "@/lib/content";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-xl text-[0.9375rem] font-medium transition-[filter,background-color,border-color,color] duration-150";
+  "inline-flex items-center justify-center gap-2 rounded-xl text-[0.9375rem] font-medium transition-[filter,background-color,border-color,color,transform,box-shadow] duration-200 ease-[var(--ease-hero)]";
 
 const variants = {
   primary: `${base} cta-primary h-12 px-6 hover:brightness-[0.96]`,

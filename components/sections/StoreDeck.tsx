@@ -41,6 +41,28 @@ export function StoreDeck() {
     return () => window.clearInterval(id);
   }, [held]);
 
+  // Horizontal drag/swipe on the stage. Vertical intent is left alone so the
+  // page still scrolls through the card — hence touch-action: pan-y and the
+  // requirement that horizontal travel clearly dominates.
+  const swipe = useRef<{ x: number; y: number } | null>(null);
+
+  const onPointerDown = (event: React.PointerEvent) => {
+    swipe.current = { x: event.clientX, y: event.clientY };
+  };
+
+  const onPointerUp = (event: React.PointerEvent) => {
+    const start = swipe.current;
+    swipe.current = null;
+    if (!start) return;
+
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
+
+    event.preventDefault();
+    takeOver((active + (dx < 0 ? 1 : -1) + count) % count);
+  };
+
   const onKeyDown = (event: React.KeyboardEvent) => {
     const step =
       event.key === "ArrowDown" || event.key === "ArrowRight"
@@ -70,7 +92,12 @@ export function StoreDeck() {
         id="store-stage"
         role="tabpanel"
         aria-labelledby={`store-tab-${products[active].id}`}
-        className="relative mx-auto w-full max-w-[22rem] shrink-0 md:mx-0 md:max-w-none md:w-[clamp(18rem,40vw,27rem)] lg:w-[clamp(21rem,32vw,27rem)]"
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onPointerCancel={() => {
+          swipe.current = null;
+        }}
+        className="relative mx-auto w-full max-w-[22rem] shrink-0 touch-pan-y select-none md:mx-0 md:max-w-none md:w-[clamp(18rem,40vw,27rem)] lg:w-[clamp(21rem,32vw,27rem)]"
       >
         <div className="relative aspect-20/19">
           <div
@@ -108,12 +135,17 @@ export function StoreDeck() {
                       aria-label, so nothing is lost for assistive tech. A dark
                       chip rather than a bare icon, because the artwork behind
                       it ranges from near-black navy to brand yellow. */}
-                  <span
-                    aria-hidden="true"
-                    className="absolute top-3 right-3 flex size-9 items-center justify-center rounded-full bg-ink/65 text-paper backdrop-blur-sm transition-colors duration-200 group-hover:bg-ink/85"
-                  >
-                    <ArrowUpRight className="size-4" strokeWidth={1.5} />
-                  </span>
+                  {/* Only the front card gets one. The cards behind are inert,
+                      so an affordance there points at nothing — and three
+                      yellow discs stacked together read as noise. */}
+                  {isActive ? (
+                    <span
+                      aria-hidden="true"
+                      className="absolute top-3 right-3 flex size-9 items-center justify-center rounded-full bg-brand text-brand-ink transition-transform duration-200 group-hover:scale-110"
+                    >
+                      <ArrowUpRight className="size-4" strokeWidth={2} />
+                    </span>
+                  ) : null}
                 </Link>
               </div>
             );
@@ -146,18 +178,18 @@ export function StoreDeck() {
               aria-controls="store-stage"
               tabIndex={isActive ? 0 : -1}
               onClick={() => takeOver(i)}
-              className="group relative flex min-h-12 items-center gap-4 border-t border-paper/12 text-left last:border-b"
+              className="group relative flex min-h-11 items-center gap-3.5 border-t border-paper/12 text-left last:border-b"
             >
               <span
-                className={`type-micro transition-colors duration-200 ${
-                  isActive ? "text-brand" : "text-on-dark/75"
+                className={`type-micro text-[0.6875rem] transition-colors duration-200 ${
+                  isActive ? "text-brand" : "text-on-dark/80"
                 }`}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span
-                className={`type-card transition-colors duration-200 ${
-                  isActive ? "text-paper" : "text-on-dark/70 group-hover:text-paper"
+                className={`text-[0.9375rem] tracking-[-0.01em] transition-colors duration-200 ${
+                  isActive ? "text-paper" : "text-on-dark/80 group-hover:text-paper"
                 }`}
               >
                 {product.name}

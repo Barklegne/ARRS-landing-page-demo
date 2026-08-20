@@ -385,6 +385,17 @@
     0 12px 28px -16px color-mix(in oklab, var(--color-brand) 45%, transparent);
 }
 
+/* Hover companion to cta-primary. Declared as a utility rather than an
+   arbitrary shadow-[...] value: a nested color-mix() inside square brackets
+   does not survive Tailwind's arbitrary-value parser, and the emitted
+   transparent shadow chain silently WIPED cta-primary's own box-shadow on
+   hover — the button lost its lift instead of gaining one. */
+@utility cta-lift {
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 55%, transparent),
+    0 18px 34px -14px color-mix(in oklab, var(--color-brand) 55%, transparent);
+}
+
 @utility cta-glass {
   color: var(--color-paper);
   background-color: color-mix(in oklab, var(--color-paper) 8%, transparent);
