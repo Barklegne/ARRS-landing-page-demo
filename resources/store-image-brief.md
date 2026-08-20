@@ -237,3 +237,40 @@ Society` on the neck labels. That is fine for a mockup and reads convincingly.
 It is **not** the society's real logo, and the invented-data ledger in
 `CLAUDE.md` records it as placeholder branding to be replaced before this is
 shown as anything but a portfolio piece.
+
+
+---
+
+# Round three — one file left
+
+The replaced `mugs` and `radres-tee` fixed the consistency problem. All four
+now share a near-black navy ground, measured:
+
+| file | corner | centre-top |
+|---|---|---|
+| `hoodie-navy.webp` | `#060B17` | `#0D1728` |
+| `roentgen-ray-tee.webp` | `#010206` | `#081122` |
+| `radres-tee.webp` | `#0B1222` | `#131B2F` |
+| `mugs.webp` | `#0D1328` | `#151C35` |
+
+## `mugs.webp` needs one more pass — it is landscape
+
+It came back **1402 × 1122**, which is 1.25 wide rather than 0.8 tall. Cropping
+it to the card cost 36.2% of the width, 18.1% off each side, which removed the
+navy mug's handle completely and clipped the white one's.
+
+The page now renders it letterboxed instead of cropped so nothing is amputated,
+with the card taking the photo's own ground colour so the bands blend. The mugs
+still sit smaller in frame than the other three.
+
+Regenerate it as **1122 × 1402 portrait** — same scene, same lighting, same
+navy ground, just a taller frame with the two mugs arranged to fill it. Then
+delete the `fit` and `ground` fields from the mugs entry in `lib/content.ts`
+and it goes back to filling the card like the rest.
+
+## If images ever look unchanged after replacing them
+
+Next's image optimizer caches by source URL, and the URL does not change when
+the file behind it does. Clearing `.next/cache/images` is **not** enough —
+Turbopack keeps a second persistent cache. Stop the dev server, `rm -rf .next`,
+and restart. A browser hard-reload alone will not do it either.

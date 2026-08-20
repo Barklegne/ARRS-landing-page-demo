@@ -228,6 +228,15 @@ export interface Product {
    * Generation brief: `resources/store-image-brief.md`.
    */
   readonly src?: string;
+  /**
+   * Set when the artwork is not 4:5. `cover` would crop it to fit the stage —
+   * mugs.webp is 1402x1122 landscape and lost 18% off each side, taking both
+   * handles with it. `contain` shows the whole frame; pair it with `ground` so
+   * the letterbox reads as the photo's own backdrop rather than as bars.
+   */
+  readonly fit?: "cover" | "contain";
+  /** The artwork's own background, sampled from its corners. */
+  readonly ground?: string;
 }
 
 export const store = {
@@ -240,7 +249,13 @@ export const store = {
   products: [
     { id: "hoodie", name: "Hoodie", src: "/store/hoodie-navy.webp" },
     { id: "roentgen-ray-tee", name: "Roentgen Ray tee", src: "/store/roentgen-ray-tee.webp" },
-    { id: "mugs", name: "Mugs", src: "/store/mugs.webp" },
+    {
+      id: "mugs",
+      name: "Mugs",
+      src: "/store/mugs.webp",
+      fit: "contain",
+      ground: "#0C1327",
+    },
     { id: "radres-tee", name: "RADRES tee", src: "/store/radres-tee.webp" },
   ],
 } as const satisfies {

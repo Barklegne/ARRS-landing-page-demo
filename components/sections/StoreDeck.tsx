@@ -4,9 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { productImage, store } from "@/lib/content";
+import { productImage, store, type Product } from "@/lib/content";
 
-const products = store.products;
+const products: readonly Product[] = store.products;
 const count = products.length;
 
 // Depth slots, front to back. Card width is 76% of the stage, so the deepest
@@ -91,6 +91,7 @@ export function StoreDeck() {
                   href={store.cta.href}
                   tabIndex={isActive ? undefined : -1}
                   aria-label={`${product.name} — shop the store`}
+                  style={product.ground ? { backgroundColor: product.ground } : undefined}
                   className="store-card group relative block h-full overflow-hidden rounded-[var(--radius-card)]"
                 >
                   <Image
@@ -98,7 +99,9 @@ export function StoreDeck() {
                     alt={`${product.name} from the ARRS store`}
                     fill
                     sizes="(min-width: 1024px) 26rem, 76vw"
-                    className="object-cover transition-transform duration-700 ease-[var(--ease-hero)] group-hover:scale-[1.03]"
+                    className={`transition-transform duration-700 ease-[var(--ease-hero)] group-hover:scale-[1.03] ${
+                      product.fit === "contain" ? "object-contain" : "object-cover"
+                    }`}
                   />
                   {/* The name is already the index row two columns left, so
                       printing it again here was redundant. The link keeps its
