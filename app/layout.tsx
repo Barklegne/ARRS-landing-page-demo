@@ -42,7 +42,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
-      <body className="pad-for-bottom-chrome">
+      <body className="pad-for-bottom-chrome" suppressHydrationWarning>
         <a
           href="#main"
           className="skip-link"

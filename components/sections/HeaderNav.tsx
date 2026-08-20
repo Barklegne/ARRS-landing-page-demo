@@ -14,7 +14,7 @@ const watched: Record<string, string | null> = {
 };
 
 export function HeaderNav() {
-  const [active, setActive] = useState("home");
+  const [active, setActive] = useState<string | null>("home");
 
   useEffect(() => {
     const ids = Object.values(watched).filter((id): id is string => id !== null);
@@ -23,15 +23,40 @@ export function HeaderNav() {
       .filter((el): el is HTMLElement => el !== null);
     if (!sections.length) return;
 
+    const keyFor = (id: string) =>
+      Object.entries(watched).find(([, watchedId]) => watchedId === id)?.[0] ?? null;
+
     const sync = () => {
-      let current = "home";
-      for (const section of sections) {
-        const landing = parseFloat(getComputedStyle(section).scrollMarginTop) || 0;
-        if (section.getBoundingClientRect().top <= landing + 4) {
-          const entry = Object.entries(watched).find(([, id]) => id === section.id);
-          if (entry) current = entry[0];
+      // Each watched section owns the span from its own top to the next one's
+      // top, so scrolling the destination tiers between "your meeting" and the
+      // app card keeps Schedule lit instead of blinking off. The last one owns
+      // only its own height — past it the page is the Denver band, the FAQ and
+      // the footer, none of which is a header destination, so nothing is
+      // marked. Anchoring on the section's own scroll-margin keeps the marker
+      // in step with where an anchor jump actually lands.
+      let current: string | null = null;
+
+      for (let i = 0; i < sections.length; i += 1) {
+        const section = sections[i];
+        const line = (parseFloat(getComputedStyle(section).scrollMarginTop) || 0) + 4;
+        const start = section.getBoundingClientRect().top;
+        const next = sections[i + 1];
+        const end = next
+          ? next.getBoundingClientRect().top
+          : section.getBoundingClientRect().bottom;
+
+        if (start <= line && end > line) {
+          current = keyFor(section.id);
+          break;
         }
       }
+
+      if (current === null) {
+        const first = sections[0];
+        const firstLine = (parseFloat(getComputedStyle(first).scrollMarginTop) || 0) + 4;
+        if (first.getBoundingClientRect().top > firstLine) current = "home";
+      }
+
       setActive(current);
     };
 
