@@ -70,7 +70,25 @@ The redesign fixes each of these. Do not simply restyle the tiles.
 
 **Preserve all content. Introduce hierarchy through grouping and sizing, not deletion.**
 
-All twelve destinations from the screenshot stay on the page. They are grouped into three labelled tiers with different card sizes so the eye lands on the high-value ones first. Nothing is hidden behind a disclosure — hiding complexity is not the same as resolving it.
+All twelve destinations from the screenshot stay on the page. Nothing is hidden
+behind a disclosure — hiding complexity is not the same as resolving it.
+
+They are grouped into three labelled tiers rendered at **three distinct display
+levels**, not two sizes:
+
+| tier | display | treatment |
+|---|---|---|
+| `YOUR MEETING` | `feature` | Large cards that lead with live state. The figure is the dominant element — `412`, `1,860`, `6`, `18 of 32` — set in display type, with the destination name above it as a mono micro-label. Claim credit carries the progress ring. |
+| `EXPLORE AND CONNECT` | `compact` | Medium cards, icon plus label, four across. |
+| `RECOGNITION AND SUPPORT` | `chip` | Inline pills in a single wrapping row. |
+
+The gap between levels is the argument. A returning attendee's eye lands on a
+number that belongs to them before it reaches anything else, and the donor wall
+cannot compete with the credit counter for attention. **Deleting the low-value
+destinations was considered and rejected**: a reviewer comparing against the
+original would read missing functionality rather than editing, and the claim
+that hierarchy beats deletion is the redesign's strongest point. Demote, do not
+remove.
 
 **The hero is a working dashboard, not a billboard.** This is a logged-in portal. The hero is a bento composition where the supporting cells show live state (CME progress, next session, library scale). A bento hero full of decorative cells is already a cliché; one wired to real data is not.
 
@@ -276,19 +294,20 @@ Everything below comes from `resources/reference-image.png`. Do not paraphrase t
 
 **The twelve destinations, grouped**
 
-*Tier one — `YOUR MEETING`* (large cards, live state)
-| Card | Meta line |
-|---|---|
-| My schedule | `6 sessions saved across four days.` |
-| Sessions | `412 available` |
-| Online posters | `1,860 posters` |
-| Claim credit | `18 of 32 claimed` |
-| Abstracts | — |
+*Tier one — `YOUR MEETING`* (feature cards; the figure is the hero, the label
+is the caption)
+| Card | Figure | Trailing copy |
+|---|---|---|
+| My schedule | `6` | `sessions saved across four days` |
+| Claim credit | `18 of 32` | `claimed so far`, plus the ring |
+| Sessions | `412` | `available` |
+| Online posters | `1,860` | `posters` |
+| Abstracts | — | no live state; the label is set large instead of printed twice |
 
-*Tier two — `EXPLORE AND CONNECT`* (equal medium cards)
+*Tier two — `EXPLORE AND CONNECT`* (compact cards)
 Key case challenge · Connection quad · Lunch symposia · In-person info and floorplans
 
-*Tier three — `RECOGNITION AND SUPPORT`* (equal medium cards)
+*Tier three — `RECOGNITION AND SUPPORT`* (chips)
 Awardees · Donor wall · Sponsors
 
 **Store section**
@@ -353,15 +372,21 @@ without asking.
 
 Build in this order. Each is its own component under `components/sections/`.
 
-1. `SiteHeader` — logo lockup, live status pill, four nav links, mobile menu trigger
-2. `HeroBento` — headline cell + three live cells + full-width search cell
+1. `SiteHeader` — logo lockup, live status pill, nav links, mobile menu trigger
+2. `HeroBento` — headline, CTAs, avatars, up-next card, search, stat rail
 3. `SessionTicker` — marquee strip
-4. `DestinationTier` × 3 — reusable, driven by a data array
-5. `StoreSection`
+4. `StoreSection` + `StoreDeck` — **sits directly after the ticker**, above the
+   tiers. A depth-stacked product deck: swipeable, prev/next, one auto-advance
+   lap then rest. Full-bleed navy.
+5. `DestinationTier` × 3 — one component, three display levels from `tier.display`
 6. `AppSection`
 7. `NextYearBand`
 8. `SiteFooter`
 9. `MobileTabBar` — mobile only, fixed bottom
+
+Order note: the store precedes the twelve destinations. That is a commercial
+placement the client asked for and it partly reverses diagnosis point three —
+the README must argue both sides rather than pretend it did not happen.
 
 ### Hero composition — the signature element
 
@@ -446,25 +471,38 @@ of the phrase is rendered from CSS `content: attr(data-text)` so it stays out of
 Easing for the wipe: `cubic-bezier(0.5, 0, 0.2, 1)` over ~540ms. An expo-out curve is
 ~90% complete in the first 100ms and reads as a flash, not a stroke.
 
-### Scroll reveals
+### Scroll reveals — built
 
-Use the **CSS scroll-driven animations API** — no JS, no observer, no library:
+CSS scroll-driven animations, no observer and no library in supporting browsers:
 
 ```css
 @supports (animation-timeline: view()) {
-  .reveal {
-    animation: rise linear both;
+  .tier-reveal {
+    animation: tier-rise linear both;      /* NO time duration — see below */
     animation-timeline: view();
-    animation-range: entry 10% cover 32%;
+    animation-range: entry calc(5% + var(--i, 0) * 4%) cover calc(26% + var(--i, 0) * 4%);
   }
-}
-@keyframes rise {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: none; }
 }
 ```
 
-Provide an `IntersectionObserver` fallback for browsers without support. Reveals apply to section eyebrows and card groups only — stagger cards within a group by 60ms. Never animate the same element twice.
+Two things that only measurement surfaced:
+
+- **Never give a scroll-driven animation a time duration.** Written as
+  `animation: tier-rise 1ms linear both` it reported the right computed styles
+  and still snapped between two states — sampling opacity across the scroll
+  gave exactly two distinct values. `animation-duration` must stay `auto` for
+  the keyframes to map onto `animation-range`. Without the duration the same
+  sample reads `0.00 → 0.21 → 0.92 → 1.00`.
+- **Stagger with `animation-range`, not `animation-delay`.** Scroll timelines
+  ignore delay. Each card carries its index as `--i` and shifts its own range,
+  which measures as a real cascade: four cards at `0.31 / 0.25 / 0.21 / 0.18`
+  in the same frame.
+
+`RevealFallback` is mounted once in `app/page.tsx`. It no-ops where
+`animation-timeline` is supported; elsewhere it flags the document and wires an
+`IntersectionObserver`. The hidden start state is scoped to that flag, so with
+no JS the base state stays the finished one and nothing can be stranded
+invisible.
 
 ### Micro-interactions
 
@@ -544,7 +582,7 @@ Mobile-first. Write the mobile styles as the base and layer up.
 
 | Width | Behaviour |
 |---|---|
-| < 640px | Single column. Hero cells stack. Destination tiers become a 2-up grid, tier-one "My schedule" spans both columns. Store products scroll horizontally with snap points. Tab bar visible. |
+| < 640px | Single column. Hero cells stack. Destination tiers become a 2-up grid, tier-one "My schedule" spans both columns. The store deck hides its index list (`sr-only`, so the tabs stay in the accessibility tree) and navigates by swipe and prev/next; the active product's name moves into the control row. The footer drops its two duplicated link columns. Tab bar visible. |
 | 640–1024px | 2-up grids throughout. Hero becomes 2 columns at 900px. Tab bar hidden, sticky CTA bar appears instead. |
 | > 1024px | Full bento layout as specified. |
 
@@ -577,11 +615,13 @@ Treat this as a feature and document it. A radiology society is ADA-sensitive; m
   measures ~180KB, of which ~114KB is `react` + `react-dom` + the Next client runtime
   before any application code. Every chunk containing our code is 2–10KB. This is a
   framework floor, not a code problem.
-- Server Components by default. `"use client"` is currently on nine components:
+- Server Components by default. `"use client"` is currently on eleven components:
   `RotatingHeadline`, `HeroSearch`, `RegisterDialog`, `VideoDialog`, `PlayLink`,
-  `ScrollCue`, `CountUp`, `MobileMenu`, `MobileTabBar`. Each needs interactivity or
-  `matchMedia`. Keep additions justified, but the original four-component allowlist is
-  superseded.
+  `ScrollCue`, `CountUp`, `MobileMenu`, `MobileTabBar`, `StoreDeck`,
+  `RevealFallback`. Each needs interactivity, `matchMedia`, or an observer.
+  `RevealFallback` renders nothing and no-ops entirely in browsers that support
+  `animation-timeline`. Keep additions justified; the original four-component
+  allowlist is superseded.
 - Static generation. No runtime data fetching — all content is a typed constant in `lib/content.ts`.
 
 ---
@@ -659,6 +699,10 @@ emulation, and LCP/CLS. Use it for:
   `clipPath`, and final numerals. Toggle the setting, never read the CSS.
 - **Dialogs** — `:modal`, focus inside on open, real `Escape` keypress, focus restored
 - **Animation** — sample `getComputedStyle` across the window to prove interpolation
+- **Scroll-driven animation** — sample the animated property while *scrolling*,
+  not while hovering or waiting. A snap and a smooth reveal report identical
+  computed styles at rest; only stepping the scroll position apart reveals
+  which one you built.
 - **Section seams** — compare the two sides **per RGB channel, and check hue
   separately**, not by luminance. A decorative bloom that dies at a section
   boundary shifts hue while barely moving luminance: the store's floor measured
@@ -691,10 +735,17 @@ Stop and report:
 - Any place the content inventory was ambiguous
 - A prompt asking the reviewer to check the page at 390px before continuing
 
-> **Deviation, approved:** the hero was iterated well past Phase 1 — its motion,
-> micro-interactions, the register modal, and the video player all shipped early so the
-> experience could be felt. Dark mode and the grain-over-navy treatment for the *other*
-> sections remain outstanding. The remaining sections are still at Phase 1.
+> **Phase status, superseded by client iteration.** The build did not proceed
+> phase by phase — the client reviewed and directed section by section instead,
+> which is a better process for this and produced the current page. As of now:
+>
+> - **Hero** — complete, including motion, register modal and video player.
+> - **Store** — complete. Deck, swipe, controls, real artwork, one-lap advance.
+> - **Destination tiers** — complete, on navy, with scroll reveals and counters.
+> - **Footer** — complete.
+> - **App section / Denver band** — restyled for navy, otherwise Phase 1.
+> - **Outstanding:** the theming decision below, an `axe`/Lighthouse pass, and
+>   the README.
 
 ### Phase 2 — motion and theming
 
@@ -717,19 +768,23 @@ Only after phase 2 is approved. Run the Definition of done checklist item by ite
 
 - [ ] Every string traces to `resources/reference-image.png`, the inventory, or the
       invented-data ledger — and the ledger has been reviewed for replacement
-- [ ] All twelve destinations present, grouped into three tiers
+- [ ] All twelve destinations present, at three display levels — feature,
+      compact, chip. Count them on the rendered page, not in the data
 - [ ] Colour: no budget to check. Every text/background pair passes WCAG AA
       measured against its real composited backdrop, and no state is signalled
       by colour alone
 - [ ] Zero `href="#"`; every route resolves
 - [ ] No horizontal scroll at 320px, and none at any tested width
 - [ ] No interactive control under 44×44
-- [ ] Headline reveal, marker wipe, ring, and counters all degrade correctly with
-      `prefers-reduced-motion` **emulated**, not inspected
+- [ ] Headline reveal, marker wipe, ring, counters, store deck and tier scroll
+      reveals all degrade correctly with `prefers-reduced-motion` **emulated**,
+      not inspected
 - [ ] Every dialog: `:modal`, focus trapped, Escape closes, focus restored
 - [ ] Lighthouse: 100 accessibility, CLS 0. Performance judged against the measured
       framework floor, not the original <100KB figure
-- [ ] Dark mode ships and is correct
+- [ ] The theming decision is made and shipped — see the dark-mode note in
+      Colour rules. The page is now dark end to end, so "invert the paper
+      sections" no longer describes anything
 - [ ] `motion` either adopted or removed
 - [ ] `npm run build` produces zero warnings
 - [ ] README written, including the Unsplash credits and the placeholder disclosure

@@ -60,10 +60,13 @@ export function SiteFooter() {
 
           <nav
             aria-label="Footer"
-            className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:gap-x-14"
+            className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:gap-x-14"
           >
             {footer.columns.map((column) => (
-              <div key={column.id} className="flex flex-col gap-3">
+              <div
+                key={column.id}
+                className={`flex-col gap-3 ${column.hideBelowMd ? "hidden md:flex" : "flex"}`}
+              >
                 <h2 className="type-micro text-on-dark/85">{column.title}</h2>
                 <ul className="flex flex-col gap-0.5">
                   {column.links.map((link) => (

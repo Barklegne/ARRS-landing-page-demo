@@ -49,12 +49,25 @@ export interface Destination {
   readonly icon: LucideIcon;
   readonly meta?: string;
   readonly span?: Span;
+  /** Live state, rendered as the card's dominant element in the feature tier. */
+  readonly stat?: { readonly value: number; readonly unit: string };
+  /** Claim credit only — the one destination with a completion figure. */
+  readonly progress?: { readonly claimed: number; readonly total: number };
+  /** Feature-tier column span at lg, out of six. */
+  readonly wide?: boolean;
 }
+
+/**
+ * Three display levels rather than two. Every destination is still present —
+ * hierarchy comes from how much room each one gets, which is the whole
+ * argument of the redesign.
+ */
+export type TierDisplay = "feature" | "compact" | "chip";
 
 export interface Tier {
   readonly id: string;
   readonly eyebrow: string;
-  readonly size: "large" | "medium";
+  readonly display: TierDisplay;
   readonly items: readonly Destination[];
 }
 
@@ -180,26 +193,48 @@ export const tiers: readonly Tier[] = [
   {
     id: "your-meeting",
     eyebrow: "YOUR MEETING",
-    size: "large",
+    display: "feature",
     items: [
       {
         id: "schedule",
         label: "My schedule",
         href: "/schedule",
         icon: CalendarDays,
-        meta: "6 sessions saved across four days.",
+        meta: "across four days",
+        stat: { value: 6, unit: "sessions saved" },
         span: "wide",
+        wide: true,
       },
-      { id: "sessions", label: "Sessions", href: "/sessions", icon: Presentation, meta: "412 available" },
-      { id: "posters", label: "Online posters", href: "/posters", icon: Laptop, meta: "1,860 posters" },
-      { id: "credit", label: "Claim credit", href: "/credit", icon: BadgeCheck, meta: "18 of 32 claimed" },
+      {
+        id: "credit",
+        label: "Claim credit",
+        href: "/credit",
+        icon: BadgeCheck,
+        meta: "claimed so far",
+        progress: { claimed: 18, total: 32 },
+        wide: true,
+      },
+      {
+        id: "sessions",
+        label: "Sessions",
+        href: "/sessions",
+        icon: Presentation,
+        stat: { value: 412, unit: "available" },
+      },
+      {
+        id: "posters",
+        label: "Online posters",
+        href: "/posters",
+        icon: Laptop,
+        stat: { value: 1860, unit: "posters" },
+      },
       { id: "abstracts", label: "Abstracts", href: "/abstracts", icon: List },
     ],
   },
   {
     id: "explore-and-connect",
     eyebrow: "EXPLORE AND CONNECT",
-    size: "medium",
+    display: "compact",
     items: [
       { id: "key-case-challenge", label: "Key case challenge", href: "/key-case-challenge", icon: Key },
       { id: "connection-quad", label: "Connection quad", href: "/connection-quad", icon: Users },
@@ -210,11 +245,11 @@ export const tiers: readonly Tier[] = [
   {
     id: "recognition-and-support",
     eyebrow: "RECOGNITION AND SUPPORT",
-    size: "medium",
+    display: "chip",
     items: [
       { id: "awardees", label: "Awardees", href: "/awardees", icon: Award },
       { id: "donor-wall", label: "Donor wall", href: "/donor-wall", icon: HandCoins },
-      { id: "sponsors", label: "Sponsors", href: "/sponsors", icon: Handshake, span: "wide-mobile" },
+      { id: "sponsors", label: "Sponsors", href: "/sponsors", icon: Handshake },
     ],
   },
 ];
@@ -322,6 +357,10 @@ export const footer = {
     {
       id: "meeting",
       title: "THE MEETING",
+      // Every link here is a destination the page body already promotes and
+      // the mobile tab bar already reaches, so on a phone this column is pure
+      // duplication in the longest part of the page.
+      hideBelowMd: true,
       links: [
         { id: "sessions", label: "Sessions", href: "/sessions" },
         { id: "posters", label: "Online posters", href: "/posters" },
@@ -332,6 +371,7 @@ export const footer = {
     {
       id: "portal",
       title: "YOUR PORTAL",
+      hideBelowMd: true,
       links: [
         { id: "schedule", label: "My schedule", href: "/schedule" },
         { id: "credit", label: "Claim credit", href: "/credit" },
@@ -353,6 +393,8 @@ export const footer = {
     readonly id: string;
     readonly title: string;
     readonly links: readonly FooterLink[];
+    /** Society links are the only ones not reachable elsewhere on a phone. */
+    readonly hideBelowMd?: boolean;
   }[],
   // Taken from the live links published on arrs.org, not guessed.
   social: [

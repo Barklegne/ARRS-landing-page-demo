@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
@@ -11,14 +11,19 @@ export function CountUp({
   delay,
   duration = 800,
   className = "",
+  whenVisible = false,
 }: {
   value: number;
   delay: number;
   duration?: number;
   className?: string;
+  /** Below-fold counters should run when reached, not on mount into an empty
+   *  viewport where the animation is spent before anyone can see it. */
+  whenVisible?: boolean;
 }) {
   const final = value.toLocaleString("en-US");
   const [display, setDisplay] = useState<string | null>(null);
+  const host = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -34,19 +39,45 @@ export function CountUp({
       else setDisplay(null);
     };
 
-    const timer = window.setTimeout(() => {
-      setDisplay("0");
-      frame = requestAnimationFrame(step);
-    }, delay);
+    let timer = 0;
+    const start = () => {
+      timer = window.setTimeout(() => {
+        setDisplay("0");
+        frame = requestAnimationFrame(step);
+      }, delay);
+    };
+
+    if (!whenVisible) {
+      start();
+      return () => {
+        window.clearTimeout(timer);
+        cancelAnimationFrame(frame);
+      };
+    }
+
+    const node = host.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        observer.disconnect();
+        start();
+      },
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    observer.observe(node);
 
     return () => {
+      observer.disconnect();
       window.clearTimeout(timer);
       cancelAnimationFrame(frame);
     };
-  }, [value, delay, duration]);
+  }, [value, delay, duration, whenVisible]);
 
   return (
     <span
+      ref={host}
       className={`inline-block tabular-nums ${className}`}
       style={{ minWidth: `${final.length}ch` } as CSSProperties}
     >

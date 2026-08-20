@@ -4,11 +4,13 @@ import { DestinationTier } from "@/components/sections/DestinationTier";
 import { StoreSection } from "@/components/sections/StoreSection";
 import { AppSection } from "@/components/sections/AppSection";
 import { NextYearBand } from "@/components/sections/NextYearBand";
+import { RevealFallback } from "@/components/ui/RevealFallback";
 import { tiers } from "@/lib/content";
 
 export default function Home() {
   return (
     <main id="main">
+      <RevealFallback />
       <HeroBento />
       <SessionTicker />
       <StoreSection />

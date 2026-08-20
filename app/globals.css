@@ -488,6 +488,81 @@
   }
 }
 
+/* Dashboard figure. The destination tiers lead with live state, so the number
+   is the card's dominant element rather than a caption under the label. */
+@utility type-stat {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.75rem, 4.2vw, 2.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+@utility tier-chip {
+  border-color: color-mix(in oklab, var(--color-paper) 16%, transparent);
+  background-color: color-mix(in oklab, var(--color-paper) 4%, transparent);
+  transition:
+    color 180ms var(--ease-hero),
+    border-color 180ms var(--ease-hero),
+    background-color 180ms var(--ease-hero);
+}
+.tier-chip:hover {
+  color: var(--color-paper);
+  border-color: color-mix(in oklab, var(--color-paper) 32%, transparent);
+  background-color: color-mix(in oklab, var(--color-paper) 8%, transparent);
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll reveals.
+
+   Base state is the FINISHED state, as everywhere else in this build, so no
+   JS, no animation support and reduced motion all render the completed page.
+   Stagger comes from shifting each card's animation-range by its index rather
+   than from animation-delay, which scroll-driven timelines ignore.
+   --------------------------------------------------------------------------- */
+@keyframes tier-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .tier-reveal {
+    /* No time duration. A scroll-driven animation needs animation-duration:
+       auto so the keyframes map onto animation-range; giving it 1ms made the
+       reveal snap between two states instead of interpolating across entry. */
+    animation: tier-rise linear both;
+    animation-timeline: view();
+    animation-range: entry calc(5% + var(--i, 0) * 4%) cover calc(26% + var(--i, 0) * 4%);
+  }
+}
+
+/* IntersectionObserver path, only for browsers without the timeline. The
+   hidden start state is scoped to the flag RevealFallback sets, so it can
+   never apply without the observer that clears it. */
+[data-reveal-js] .tier-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 620ms var(--ease-hero),
+    transform 620ms var(--ease-hero);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+[data-reveal-js] .tier-reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tier-reveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 @utility deck-nav {
   color: var(--color-on-dark);
   border: 0.5px solid color-mix(in oklab, var(--color-paper) 20%, transparent);
