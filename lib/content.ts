@@ -225,6 +225,7 @@ export interface Product {
   /**
    * Local 4:5 artwork under `public/store/`. Left undefined until real
    * photography exists, which falls the card back to a labelled placeholder.
+   * Generation brief: `resources/store-image-brief.md`.
    */
   readonly src?: string;
 }
