@@ -1563,27 +1563,17 @@
   }
 }
 
-/* The active section's marker. It grows from the centre so moving between
-   sections reads as one indicator travelling rather than four blinking. */
-@utility nav-underline {
-  background-color: var(--color-brand);
-  scale: 0 1;
-  opacity: 0;
-  transition:
-    scale 260ms var(--ease-hero),
-    opacity 260ms var(--ease-hero);
-}
-.nav-underline[data-on] {
-  scale: 1 1;
-  opacity: 1;
-}
-
+/* The active section is marked by colour rather than an underline, at the
+   client's request. Brand yellow and --color-on-dark measured 12.08 and 12.11
+   against the header — the same lightness, so in greyscale the marker vanished
+   entirely and colour really was the only signal. Dimming the inactive links
+   restores a lightness step, so the active item reads as brighter as well as
+   yellow, and `aria-current="true"` carries it for assistive tech. */
 @utility nav-link {
   transition: color 200ms var(--ease-hero);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nav-underline,
   .nav-link {
     transition: none !important;
   }

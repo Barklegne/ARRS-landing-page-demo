@@ -69,6 +69,42 @@ export function HeaderNav() {
     };
   }, []);
 
+  // Same-document navigation has to be driven by hand. A hash link whose hash
+  // is already in the URL is a no-op for both the browser and the router, so a
+  // second click on Download from the footer did nothing — and `href="/"` while
+  // already on `/` never scrolled at all. Both were measured from the footer:
+  // 3931 -> 3931, no movement.
+  //
+  // The href stays intact, so this only ever upgrades a link that already
+  // works: middle-click, cmd-click and no-JS all fall through to the default,
+  // and from a stub route the target does not exist here, so the browser
+  // navigates home and lands on the section by itself.
+  const jump = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (window.location.pathname !== "/") return;
+
+    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const behavior: ScrollBehavior = smooth ? "smooth" : "auto";
+
+    if (href === "/") {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior });
+      if (window.location.hash) window.history.pushState(null, "", "/");
+      return;
+    }
+
+    const target = document.getElementById(href.replace("/#", ""));
+    if (!target) return;
+
+    event.preventDefault();
+    // scrollIntoView honours the section's scroll-margin-top, so it lands
+    // clear of the sticky header without repeating that offset here.
+    target.scrollIntoView({ behavior, block: "start" });
+    if (window.location.hash !== `#${target.id}`) {
+      window.history.pushState(null, "", href);
+    }
+  };
+
   return (
     <nav
       aria-label="Portal"
@@ -80,19 +116,13 @@ export function HeaderNav() {
           <Link
             key={item.id}
             href={item.href}
+            onClick={(event) => jump(event, item.href)}
             aria-current={isActive ? "true" : undefined}
             className={`nav-link relative inline-flex min-h-11 min-w-11 items-center justify-center px-2 text-[0.9375rem] ${
-              isActive ? "text-paper" : "text-on-dark hover:text-paper"
+              isActive ? "text-brand" : "text-on-dark/70 hover:text-paper"
             }`}
           >
             {item.label}
-            {/* An underline as well as the colour change — colour alone is not
-                a state indicator (WCAG 1.4.1). */}
-            <span
-              aria-hidden="true"
-              data-on={isActive ? "" : undefined}
-              className="nav-underline absolute inset-x-2 bottom-1.5 h-0.5 rounded-full"
-            />
           </Link>
         );
       })}
