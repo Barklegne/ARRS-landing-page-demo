@@ -1,0 +1,402 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand — derived from the ARRS logo, not invented */
+  --color-ink:         oklch(0.22 0.045 245);  /* #081F36 deep navy, page-dark surface */
+  --color-ink-raised:  oklch(0.31 0.055 248);  /* #0E3055 bento cell inside dark sections */
+  --color-ink-line:    oklch(0.38 0.055 248);  /* #1B4676 hairlines on dark */
+  --color-brand:       oklch(0.88 0.185 96);   /* ARRS yellow, actions only */
+  --color-brand-ink:   oklch(0.42 0.09 85);    /* text on yellow — never black */
+  --color-blue:        oklch(0.48 0.13 250);   /* ARRS blue, links + focus rings */
+
+  /* Neutrals — warm, not gray */
+  --color-paper:       oklch(0.98 0.004 90);   /* #FAF9F6 page background */
+  --color-card:        oklch(1 0 0);
+  --color-hairline:    oklch(0.88 0.008 85);   /* #DAD6CC */
+  --color-body:        oklch(0.28 0.03 245);   /* #12263A body copy */
+  --color-muted:       oklch(0.56 0.02 245);   /* #6B7885 secondary */
+  --color-on-dark:     oklch(0.880 0.028 244.7); /* #C9DAE9 secondary on navy */
+
+  --radius-card: 16px;
+  --radius-control: 10px;
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    font-weight: 400;
+  }
+
+  /* Hierarchy comes from size and colour, never weight. */
+  h1, h2, h3, h4 {
+    font-weight: 500;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-brand);
+    color: var(--color-brand-ink);
+  }
+}
+
+@utility type-hero {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.25rem, 7vw, 3.5rem);
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+}
+
+@utility type-section {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+@utility type-card {
+  font-weight: 500;
+  font-size: clamp(0.9375rem, 2.2vw, 1.25rem);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+@utility type-body {
+  font-weight: 400;
+  font-size: clamp(0.875rem, 1.6vw, 0.9375rem);
+  line-height: 1.6;
+}
+
+@utility type-micro {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+/* Clears the fixed mobile tab bar (56px) and the 640–1024px sticky CTA bar. */
+@utility pad-for-bottom-chrome {
+  padding-bottom: calc(56px + env(safe-area-inset-bottom));
+  @variant sm {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+  @variant lg {
+    padding-bottom: 0;
+  }
+}
+
+/* Hero headline only. type-hero is left alone so the stub routes keep a
+   sane heading size. */
+@utility type-hero-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.5rem, 6vw, 5.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+}
+
+/* Light-on-dark body copy never drops below 15px and holds a 46ch measure. */
+@utility type-body-on-dark {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.6;
+  letter-spacing: 0.004em;
+  max-width: 46ch;
+
+  @variant sm {
+    font-size: 17px;
+    line-height: 1.65;
+  }
+}
+
+@utility grain {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxNDAnIGhlaWdodD0nMTQwJz48ZmlsdGVyIGlkPSduJz48ZmVUdXJidWxlbmNlIHR5cGU9J2ZyYWN0YWxOb2lzZScgYmFzZUZyZXF1ZW5jeT0nMC44NScgbnVtT2N0YXZlcz0nMycgc3RpdGNoVGlsZXM9J3N0aXRjaCcvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPScxNDAnIGhlaWdodD0nMTQwJyBmaWx0ZXI9J3VybCgjbiknLz48L3N2Zz4=");
+  background-repeat: repeat;
+  opacity: 0.02;
+}
+
+/* Directional scrim: near-opaque navy under the type on the left, falling to
+   ~40% at the right so the radiograph reads as an image there, not wallpaper. */
+@utility hero-scrim {
+  background-image: linear-gradient(
+    to right,
+    var(--color-ink) 0%,
+    var(--color-ink) 32%,
+    color-mix(in oklab, var(--color-ink) 82%, transparent) 55%,
+    color-mix(in oklab, var(--color-ink) 40%, transparent) 100%
+  );
+}
+
+@utility hero-vignette {
+  background-image: radial-gradient(
+    115% 95% at 74% 44%,
+    transparent 28%,
+    color-mix(in oklab, var(--color-ink) 62%, transparent) 100%
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   Hero motion.
+
+   Every element's BASE state is its finished state; each keyframe animates
+   *from* the initial frame with `both`. So a browser with no animation
+   support, no JS, or reduced-motion enabled renders the completed hero.
+   Orchestration runs to ~1.34s.
+   --------------------------------------------------------------------------- */
+
+@theme {
+  --ease-hero: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-wipe: cubic-bezier(0.5, 0, 0.2, 1);
+  --color-placeholder: oklch(0.66 0.02 245);
+}
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(10px); }
+}
+@keyframes hero-word {
+  from { transform: translateY(110%); }
+}
+@keyframes hero-wipe {
+  from { clip-path: inset(0 100% 0 0); }
+}
+@keyframes hero-card {
+  from { opacity: 0; transform: translateY(12px) scale(0.985); }
+}
+@keyframes hero-bar {
+  from { transform: scaleX(0); }
+}
+@keyframes hero-ring {
+  from { stroke-dashoffset: var(--ring-circumference); }
+}
+@keyframes hero-zoom {
+  from { transform: scale(1.05); }
+}
+@keyframes hero-fade {
+  from { opacity: 0; }
+}
+@keyframes scroll-dot {
+  0%   { transform: translate(-50%, 0); opacity: 0; }
+  22%  { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: translate(-50%, 15px); opacity: 0; }
+}
+
+@utility hero-rise { animation: hero-rise 560ms var(--ease-hero) both; }
+@utility hero-card-in { animation: hero-card 620ms var(--ease-hero) both; }
+@utility hero-zoom-in { animation: hero-zoom 1600ms var(--ease-hero) both; }
+@utility hero-fade-in { animation: hero-fade 500ms ease-out both; }
+
+/* Word mask. The padding/negative-margin pair keeps descenders from being
+   clipped by the overflow that makes the reveal work. */
+@utility hero-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+@utility hero-word {
+  display: inline-block;
+  animation: hero-word 680ms var(--ease-hero) both;
+}
+
+@utility hero-mark-wrap {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Light layer, visible before the marker sweeps over it. It is clipped away in
+   exact counterpoint to the fill so the two never overlap — otherwise ascender
+   tops ghost through the transparent top of the marker band. */
+@keyframes hero-unwipe {
+  from { clip-path: inset(0 0 0 0); }
+}
+@utility hero-mark-base {
+  color: var(--color-paper);
+  padding-inline: 6px;
+  margin-inline: -6px;
+  clip-path: inset(0 0 0 100%);
+  animation: hero-unwipe 540ms var(--ease-wipe) both;
+}
+
+/* Navy-on-yellow layer, clipped to nothing then wiped left to right. */
+@utility hero-mark-fill {
+  position: absolute;
+  inset: -0.05em 0 -0.04em;
+  margin-inline: -6px;
+  padding-inline: 6px;
+  color: var(--color-ink);
+  background-image: linear-gradient(
+    to bottom,
+    transparent 0 7%,
+    var(--color-brand) 7% 99%,
+    transparent 99%
+  );
+  clip-path: inset(0);
+  animation: hero-wipe 540ms var(--ease-wipe) both;
+}
+
+@utility hero-bar-fill {
+  transform-origin: left;
+  animation: hero-bar 620ms var(--ease-hero) both;
+}
+
+@utility hero-ring-arc {
+  animation: hero-ring 760ms var(--ease-hero) both;
+}
+
+@utility scroll-dot {
+  transform: translateX(-50%);
+  animation: scroll-dot 2000ms cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Must live in @layer base: unlayered rules outrank Tailwind's layered
+   utilities, so an unlayered opacity:1 here silently beat placeholder:opacity-0
+   and the crossfade never ran. */
+@layer base {
+  /* Every control reads as clickable. Tailwind v4 preflight does not set this. */
+  button:not(:disabled),
+  summary,
+  [role="button"] {
+    cursor: pointer;
+  }
+
+  /* Selection off across the page for an app-like feel; fields stay selectable
+     so typed input can still be corrected and copied. */
+  body {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  input,
+  textarea,
+  select {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  input::placeholder {
+    color: var(--color-placeholder);
+    opacity: 1;
+    transition: opacity 260ms ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise,
+  .hero-card-in,
+  .hero-fade-in {
+    animation: hero-fade 320ms ease-out both !important;
+  }
+  .hero-word,
+  .hero-zoom-in,
+  .hero-bar-fill,
+  .hero-ring-arc {
+    animation: none !important;
+  }
+  .hero-mark-fill,
+  .hero-mark-base {
+    animation: none !important;
+  }
+  .scroll-dot {
+    animation: none !important;
+    opacity: 0.9;
+  }
+}
+
+/* Frosted surface for the status pill and search field. */
+@utility surface-glass {
+  background-color: color-mix(in oklab, var(--color-paper) 6%, transparent);
+  border: 0.5px solid color-mix(in oklab, var(--color-paper) 18%, transparent);
+  backdrop-filter: blur(14px) saturate(1.15);
+}
+
+/* Headline rotation: words leave upward through the same mask they arrived in. */
+@keyframes hero-word-out {
+  to { transform: translateY(-110%); }
+}
+
+.hero-mark-fill::after {
+  content: attr(data-text);
+}
+
+.is-exiting .hero-word {
+  animation: hero-word-out 360ms cubic-bezier(0.55, 0, 0.85, 0.35) both;
+}
+.is-exiting .hero-mark-fill,
+.is-exiting .hero-mark-base {
+  animation: none;
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+@utility marquee {
+  animation: marquee 34s linear infinite;
+}
+
+@keyframes pill-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-on-dark) 55%, transparent); }
+  60%      { opacity: 0.75; box-shadow: 0 0 0 4px transparent; }
+}
+@utility live-dot {
+  animation: pill-pulse 2600ms ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee,
+  .live-dot,
+  .is-exiting .hero-word {
+    animation: none !important;
+  }
+}
+
+/* Button surfaces. Primary carries a top inner highlight and a soft coloured
+   cast so it reads as a lit object rather than a flat swatch. */
+@utility cta-primary {
+  background-color: var(--color-brand);
+  color: var(--color-brand-ink);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 55%, transparent),
+    0 12px 28px -16px color-mix(in oklab, var(--color-brand) 45%, transparent);
+}
+
+@utility cta-glass {
+  color: var(--color-paper);
+  background-color: color-mix(in oklab, var(--color-paper) 8%, transparent);
+  border: 0.5px solid color-mix(in oklab, var(--color-paper) 24%, transparent);
+  backdrop-filter: blur(14px) saturate(1.15);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--color-paper) 14%, transparent);
+}
+
+@utility cta-ghost {
+  color: var(--color-on-dark);
+}
+
+/* Light hairline hugging the photo, then a navy ring so overlapping avatars
+   stay distinct from each other and from the image behind them. */
+@utility avatar-ring {
+  box-shadow:
+    0 0 0 1.5px color-mix(in oklab, var(--color-paper) 42%, transparent),
+    0 0 0 4px var(--color-ink);
+}
