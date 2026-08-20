@@ -73,22 +73,26 @@ The redesign fixes each of these. Do not simply restyle the tiles.
 All twelve destinations from the screenshot stay on the page. Nothing is hidden
 behind a disclosure — hiding complexity is not the same as resolving it.
 
-They are grouped into three labelled tiers rendered at **three distinct display
-levels**, not two sizes:
+They are separated into **four levels, and deliberately into different component
+types**. The change of component is what says "secondary" — not a smaller card:
 
-| tier | display | treatment |
+| group | component | why |
 |---|---|---|
-| `YOUR MEETING` | `feature` | Large cards that lead with live state. The figure is the dominant element — `412`, `1,860`, `6`, `18 of 32` — set in display type, with the destination name above it as a mono micro-label. Claim credit carries the progress ring. |
-| `EXPLORE AND CONNECT` | `compact` | Medium cards, icon plus label, four across. |
-| `RECOGNITION AND SUPPORT` | `chip` | Inline pills in a single wrapping row. |
+| `YOUR MEETING` | Two elevated panels, 8/4 at `lg` | Personal and actionable. The next saved session and CME progress are the only things here that belong to the attendee, so they get the only large surfaces and the only display type. |
+| `EXPLORE THE MEETING` | Three equal cards with icon wells | Primary discovery. Catalogue counts (`412 available`, `1,860 posters`) are **secondary metadata, not KPI type** — they describe the library's size, not the attendee's progress, and sizing them like progress was the previous version's mistake. |
+| `EXPLORE & CONNECT` | Two-column navigation rows | Secondary. Rows rather than cards, with hairline separators and a muted arrow that turns yellow on hover. |
+| `RECOGNITION & SUPPORT` | Inline label plus chips, one line | Tertiary. Shares its row with its own label so it reads as a strip, not another titled section. |
 
-The gap between levels is the argument. A returning attendee's eye lands on a
-number that belongs to them before it reaches anything else, and the donor wall
-cannot compete with the credit counter for attention. **Deleting the low-value
-destinations was considered and rejected**: a reviewer comparing against the
-original would read missing functionality rather than editing, and the claim
-that hierarchy beats deletion is the redesign's strongest point. Demote, do not
-remove.
+**Deleting the low-value destinations was asked about and argued against.** A
+reviewer comparing against the original reads missing functionality rather than
+editing, and "hierarchy beats deletion" is the redesign's strongest claim.
+Demote by changing what kind of thing something is, not by removing it.
+
+**Yellow is an accent here, never a surface.** The full-bleed yellow "My
+schedule" card was removed: a giant yellow panel spent the brand's strongest
+signal on a navigation tile. Yellow now appears only as the status dot and
+pill, the percentage badge, the progress fill, the icon wells, and hover
+arrows — which is what makes it read as valuable.
 
 **The hero is a working dashboard, not a billboard.** This is a logged-in portal. The hero is a bento composition where the supporting cells show live state (CME progress, next session, library scale). A bento hero full of decorative cells is already a cliché; one wired to real data is not.
 
@@ -294,20 +298,27 @@ Everything below comes from `resources/reference-image.png`. Do not paraphrase t
 
 **The twelve destinations, grouped**
 
-*Tier one — `YOUR MEETING`* (feature cards; the figure is the hero, the label
-is the caption)
-| Card | Figure | Trailing copy |
-|---|---|---|
-| My schedule | `6` | `sessions saved across four days` |
-| Claim credit | `18 of 32` | `claimed so far`, plus the ring |
-| Sessions | `412` | `available` |
-| Online posters | `1,860` | `posters` |
-| Abstracts | — | no live state; the label is set large instead of printed twice |
+*`YOUR MEETING` — two elevated panels*
 
-*Tier two — `EXPLORE AND CONNECT`* (compact cards)
-Key case challenge · Connection quad · Lunch symposia · In-person info and floorplans
+| Panel | Contents |
+|---|---|
+| Up next | `UP NEXT` status pill, `10:30 AM · ROOM 301`, `Advances in Abdominal Imaging` (largest content type in the section), `Part of your saved schedule for today`, then a rule and `6 sessions saved across four days` / `View schedule →`. Links to `/schedule`. |
+| CME credit | `CME CREDIT`, a `56%` badge, `18 / 32` with the denominator smaller and muted, `credits claimed`, a horizontal meter, then `14 remaining` / `Continue →`. Links to `/credit`. |
 
-*Tier three — `RECOGNITION AND SUPPORT`* (chips)
+Everything on the CME panel — badge, meter width, remainder — derives from
+`cme.claimed` and `cme.total`. Change either and all three follow.
+
+*`EXPLORE THE MEETING` — three discovery cards*
+| Card | Metadata |
+|---|---|
+| Sessions | `412 available` |
+| Online posters | `1,860 posters` |
+| Abstracts | `Browse meeting research` |
+
+*`EXPLORE & CONNECT` — navigation rows, two columns*
+Key case challenge · Connection quad · Lunch symposia · In-person info & floorplans
+
+*`RECOGNITION & SUPPORT` — chips on the label's own line*
 Awardees · Donor wall · Sponsors
 
 **Store section**
@@ -364,6 +375,7 @@ without asking.
 | Up-next speaker | `Dr. Alana Whitfield` | fictional |
 | Ticker session titles | four generic strings | as permitted above |
 | Player video | a YouTube ID | stands in for real session media |
+| Next saved session | `10:30 AM · ROOM 301`, `Advances in Abdominal Imaging` | invented; `scheduleNext` in `lib/content.ts`. Distinct from `upNext`, which is the hero's resume card |
 | Store product imagery | 4 generated mockups | **invented ARRS wordmark and merchandise** — not real product |
 
 ---
@@ -378,11 +390,15 @@ Build in this order. Each is its own component under `components/sections/`.
 4. `StoreSection` + `StoreDeck` — **sits directly after the ticker**, above the
    tiers. A depth-stacked product deck: swipeable, prev/next, one auto-advance
    lap then rest. Full-bleed navy.
-5. `DestinationTier` × 3 — one component, three display levels from `tier.display`
-6. `AppSection`
-7. `NextYearBand`
-8. `SiteFooter`
-9. `MobileTabBar` — mobile only, fixed bottom
+5. `MeetingCommandCenter` — the two `YOUR MEETING` panels. Bespoke rather than
+   data-driven: they are the only two destinations whose content is personal
+   state rather than a name and a count.
+6. `DestinationTier` × 3 — one component, three component *types* from
+   `tier.display`: `discovery` cards, `row` navigation, `chip` strip.
+7. `AppSection`
+8. `NextYearBand`
+9. `SiteFooter`
+10. `MobileTabBar` — mobile only, fixed bottom
 
 Order note: the store precedes the twelve destinations. That is a commercial
 placement the client asked for and it partly reverses diagnosis point three —
@@ -582,7 +598,7 @@ Mobile-first. Write the mobile styles as the base and layer up.
 
 | Width | Behaviour |
 |---|---|
-| < 640px | Single column. Hero cells stack. Destination tiers become a 2-up grid, tier-one "My schedule" spans both columns. The store deck hides its index list (`sr-only`, so the tabs stay in the accessibility tree) and navigates by swipe and prev/next; the active product's name moves into the control row. The footer drops its two duplicated link columns. Tab bar visible. |
+| < 640px | Single column. Hero cells stack. The two command-centre panels stack, then the three discovery cards, then `EXPLORE & CONNECT` collapses to single-column rows and the recognition chips wrap. Discovery cards drop to tighter padding and gaps rather than just narrowing. The store deck hides its index list (`sr-only`, so the tabs stay in the accessibility tree) and navigates by swipe and prev/next; the active product's name moves into the control row. The footer drops its two duplicated link columns. Tab bar visible. |
 | 640–1024px | 2-up grids throughout. Hero becomes 2 columns at 900px. Tab bar hidden, sticky CTA bar appears instead. |
 | > 1024px | Full bento layout as specified. |
 

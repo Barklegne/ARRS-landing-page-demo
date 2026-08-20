@@ -5,7 +5,7 @@ import { footer, meeting, type FooterLink } from "@/lib/content";
 
 function FooterAnchor({ link }: { link: FooterLink }) {
   const className =
-    "footer-link inline-flex min-h-9 items-center text-[0.9375rem] text-on-dark";
+    "footer-link inline-flex min-h-11 items-center text-[0.9375rem] text-on-dark";
 
   return link.external ? (
     <a href={link.href} target="_blank" rel="noopener noreferrer" className={className}>

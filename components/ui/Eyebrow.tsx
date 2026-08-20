@@ -13,8 +13,15 @@ export function Eyebrow({
 }) {
   const text =
     tone === "dark" ? "text-on-dark" : tone === "brand" ? "text-brand-ink" : "text-body";
+  // On navy the rule fades out to the right rather than stopping as a hard
+  // line, so the eyebrow reads as a label with a trailing rule instead of a
+  // full-width divider competing with the cards beneath it.
   const rule =
-    tone === "dark" ? "bg-ink-line" : tone === "brand" ? "bg-brand-ink/30" : "bg-hairline";
+    tone === "dark"
+      ? "bg-linear-to-r from-paper/16 to-transparent"
+      : tone === "brand"
+        ? "bg-brand-ink/30"
+        : "bg-hairline";
 
   return (
     <div className="flex items-center gap-4">

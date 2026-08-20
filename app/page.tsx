@@ -1,6 +1,7 @@
 import { HeroBento } from "@/components/sections/HeroBento";
 import { SessionTicker } from "@/components/sections/SessionTicker";
 import { DestinationTier } from "@/components/sections/DestinationTier";
+import { MeetingCommandCenter } from "@/components/sections/MeetingCommandCenter";
 import { StoreSection } from "@/components/sections/StoreSection";
 import { AppSection } from "@/components/sections/AppSection";
 import { NextYearBand } from "@/components/sections/NextYearBand";
@@ -16,6 +17,7 @@ export default function Home() {
       <StoreSection />
       <div className="tiers-field">
         <div className="mx-auto flex max-w-[1200px] flex-col gap-14 px-5 py-14 lg:gap-16 lg:py-16">
+          <MeetingCommandCenter />
           {tiers.map((tier) => (
             <DestinationTier key={tier.id} tier={tier} />
           ))}

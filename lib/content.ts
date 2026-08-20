@@ -49,12 +49,6 @@ export interface Destination {
   readonly icon: LucideIcon;
   readonly meta?: string;
   readonly span?: Span;
-  /** Live state, rendered as the card's dominant element in the feature tier. */
-  readonly stat?: { readonly value: number; readonly unit: string };
-  /** Claim credit only — the one destination with a completion figure. */
-  readonly progress?: { readonly claimed: number; readonly total: number };
-  /** Feature-tier column span at lg, out of six. */
-  readonly wide?: boolean;
 }
 
 /**
@@ -62,7 +56,7 @@ export interface Destination {
  * hierarchy comes from how much room each one gets, which is the whole
  * argument of the redesign.
  */
-export type TierDisplay = "feature" | "compact" | "chip";
+export type TierDisplay = "discovery" | "row" | "chip";
 
 export interface Tier {
   readonly id: string;
@@ -108,7 +102,37 @@ export const cme = {
   railLabel: "18 of 32 credits",
   href: "/credit",
   action: "Claim the rest",
+  // Everything the command-centre card shows is derived from claimed/total,
+  // so changing either figure updates the badge, bar and remainder together.
+  cardLabel: "CME CREDIT",
+  cardNote: "credits claimed",
+  cardAction: "Continue",
 } as const;
+
+/**
+ * The next SAVED session, distinct from `upNext` above, which is the hero's
+ * resume-playback card. Time, room, title and note are invented and are
+ * recorded in the invented-data ledger in CLAUDE.md.
+ */
+export const scheduleNext = {
+  pill: "UP NEXT",
+  when: "10:30 AM · ROOM 301",
+  title: "Advances in Abdominal Imaging",
+  note: "Part of your saved schedule for today",
+  saved: 6,
+  savedNote: "sessions saved across four days",
+  href: "/schedule",
+  action: "View schedule",
+} as const satisfies {
+  readonly pill: string;
+  readonly when: string;
+  readonly title: string;
+  readonly note: string;
+  readonly saved: number;
+  readonly savedNote: string;
+  readonly href: AppRoute;
+  readonly action: string;
+};
 
 export const upNext = {
   label: "UP NEXT IN YOUR SCHEDULE",
@@ -191,60 +215,47 @@ export const ticker = [
 
 export const tiers: readonly Tier[] = [
   {
-    id: "your-meeting",
-    eyebrow: "YOUR MEETING",
-    display: "feature",
+    id: "explore-the-meeting",
+    eyebrow: "EXPLORE THE MEETING",
+    display: "discovery",
     items: [
-      {
-        id: "schedule",
-        label: "My schedule",
-        href: "/schedule",
-        icon: CalendarDays,
-        meta: "across four days",
-        stat: { value: 6, unit: "sessions saved" },
-        span: "wide",
-        wide: true,
-      },
-      {
-        id: "credit",
-        label: "Claim credit",
-        href: "/credit",
-        icon: BadgeCheck,
-        meta: "claimed so far",
-        progress: { claimed: 18, total: 32 },
-        wide: true,
-      },
       {
         id: "sessions",
         label: "Sessions",
         href: "/sessions",
         icon: Presentation,
-        stat: { value: 412, unit: "available" },
+        meta: "412 available",
       },
       {
         id: "posters",
         label: "Online posters",
         href: "/posters",
         icon: Laptop,
-        stat: { value: 1860, unit: "posters" },
+        meta: "1,860 posters",
       },
-      { id: "abstracts", label: "Abstracts", href: "/abstracts", icon: List },
+      {
+        id: "abstracts",
+        label: "Abstracts",
+        href: "/abstracts",
+        icon: List,
+        meta: "Browse meeting research",
+      },
     ],
   },
   {
     id: "explore-and-connect",
-    eyebrow: "EXPLORE AND CONNECT",
-    display: "compact",
+    eyebrow: "EXPLORE & CONNECT",
+    display: "row",
     items: [
       { id: "key-case-challenge", label: "Key case challenge", href: "/key-case-challenge", icon: Key },
       { id: "connection-quad", label: "Connection quad", href: "/connection-quad", icon: Users },
       { id: "lunch-symposia", label: "Lunch symposia", href: "/lunch-symposia", icon: Utensils },
-      { id: "in-person", label: "In-person info and floorplans", href: "/in-person", icon: MapPin },
+      { id: "in-person", label: "In-person info & floorplans", href: "/in-person", icon: MapPin },
     ],
   },
   {
     id: "recognition-and-support",
-    eyebrow: "RECOGNITION AND SUPPORT",
+    eyebrow: "RECOGNITION & SUPPORT",
     display: "chip",
     items: [
       { id: "awardees", label: "Awardees", href: "/awardees", icon: Award },
