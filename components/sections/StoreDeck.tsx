@@ -146,7 +146,7 @@ export function StoreDeck() {
             >
               <span
                 className={`type-micro transition-colors duration-200 ${
-                  isActive ? "text-paper" : "text-on-dark/45"
+                  isActive ? "text-paper" : "text-on-dark/75"
                 }`}
               >
                 {String(i + 1).padStart(2, "0")}

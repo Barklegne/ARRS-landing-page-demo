@@ -13,10 +13,10 @@ export function StoreSection() {
       <span aria-hidden="true" className="grain pointer-events-none absolute inset-0" />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-paper/12"
+        className="store-floor pointer-events-none absolute inset-x-0 bottom-0 h-28 lg:h-36"
       />
 
-      <div className="relative mx-auto max-w-[1200px] px-5 py-14 lg:py-16">
+      <div className="relative mx-auto max-w-[1200px] px-5 pt-14 pb-24 lg:pt-16 lg:pb-32">
         <Eyebrow id="store-eyebrow" tone="dark">
           {store.eyebrow}
         </Eyebrow>

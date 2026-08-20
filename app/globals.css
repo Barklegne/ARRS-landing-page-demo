@@ -412,20 +412,51 @@
    --------------------------------------------------------------------------- */
 
 @utility store-field {
+  /* The seam must match: the hero floor and the ticker are both flat
+     --color-ink, so the ramp STARTS there and lifts downward instead of
+     opening on --color-ink-raised, which read as a hard step (L 9.4 -> 19.8).
+     The bottom lifts toward paper so the handoff into the white
+     "YOUR MEETING" section is a ramp rather than a second hard edge. */
+  background-color: var(--color-ink);
   background-image:
+    /* Carries the hero radiograph's light source down past the ticker. */
     radial-gradient(
-      118% 88% at 76% 14%,
-      color-mix(in oklab, var(--color-paper) 14%, transparent) 0%,
+      64% 58% at 86% -34%,
+      color-mix(in oklab, var(--color-paper) 13%, transparent) 0%,
+      transparent 72%
+    ),
+    /* Whitish bloom behind the deck. */
+    radial-gradient(
+      74% 56% at 76% 56%,
+      color-mix(in oklab, var(--color-paper) 15%, transparent) 0%,
+      transparent 68%
+    ),
+    radial-gradient(
+      70% 56% at 0% 58%,
+      color-mix(in oklab, var(--color-blue) 24%, transparent) 0%,
       transparent 62%
     ),
-    radial-gradient(
-      88% 68% at 6% 94%,
-      color-mix(in oklab, var(--color-blue) 32%, transparent) 0%,
-      transparent 58%
-    ),
-    linear-gradient(168deg, var(--color-ink-raised) 0%, var(--color-ink) 56%);
+    linear-gradient(
+      180deg,
+      var(--color-ink) 0%,
+      var(--color-ink) 12%,
+      color-mix(in oklab, var(--color-ink) 55%, var(--color-ink-raised)) 52%,
+      var(--color-ink-raised) 100%
+    );
 }
 
+/* Dissolves the section floor into the paper of "YOUR MEETING" below, so the
+   page reads as one tonal journey (dark hero -> lifting store -> paper) rather
+   than three stacked blocks. Mirrors the fade the hero already uses. */
+@utility store-floor {
+  background-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklab, var(--color-paper) 34%, transparent) 52%,
+    color-mix(in oklab, var(--color-paper) 82%, transparent) 80%,
+    var(--color-paper) 100%
+  );
+}
 /* A soft bloom directly under the front card so it lifts off the field. */
 @utility store-halo {
   background-image: radial-gradient(
