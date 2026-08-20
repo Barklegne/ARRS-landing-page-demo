@@ -431,6 +431,13 @@
       color-mix(in oklab, var(--color-paper) 15%, transparent) 0%,
       transparent 68%
     ),
+    /* A warm cast under the deck. Light, not a surface — it ties the section
+       to the brand without spending a slot in the five-surface budget. */
+    radial-gradient(
+      50% 38% at 72% 78%,
+      color-mix(in oklab, var(--color-brand) 13%, transparent) 0%,
+      transparent 70%
+    ),
     radial-gradient(
       70% 56% at 0% 58%,
       color-mix(in oklab, var(--color-blue) 24%, transparent) 0%,

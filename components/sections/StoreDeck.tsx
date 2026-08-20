@@ -146,7 +146,7 @@ export function StoreDeck() {
             >
               <span
                 className={`type-micro transition-colors duration-200 ${
-                  isActive ? "text-paper" : "text-on-dark/75"
+                  isActive ? "text-brand" : "text-on-dark/75"
                 }`}
               >
                 {String(i + 1).padStart(2, "0")}
@@ -162,12 +162,12 @@ export function StoreDeck() {
               {isActive ? (
                 <span
                   aria-hidden="true"
-                  className="absolute inset-x-0 -bottom-px h-px bg-paper/25"
+                  className="absolute inset-x-0 -bottom-px h-0.5 bg-paper/20"
                 >
                   <span
                     key={`${active}-${String(held)}`}
                     style={{ "--store-dwell": `${store.dwell}ms` } as React.CSSProperties}
-                    className={`block h-full w-full bg-paper ${held ? "" : "store-dwell"}`}
+                    className={`block h-full w-full bg-brand ${held ? "" : "store-dwell"}`}
                   />
                 </span>
               ) : null}

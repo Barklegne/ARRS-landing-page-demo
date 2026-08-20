@@ -25,7 +25,7 @@ export function StoreSection() {
           <div className="flex flex-col items-start gap-4">
             <h2 className="type-section max-w-[14ch] text-paper">{store.heading}</h2>
             <p className="type-body-on-dark">{store.body}</p>
-            <CTA href={store.cta.href} variant="glass" className="mt-2">
+            <CTA href={store.cta.href} variant="primary" className="mt-2">
               {store.cta.label}
               <ArrowRight aria-hidden="true" className="size-4" strokeWidth={1.5} />
             </CTA>
